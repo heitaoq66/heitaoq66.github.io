@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-18T13:17:26.471Z</updated>
+  <updated>2020-03-18T13:18:19.028Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://heitaoq66.github.io/2020/03/17/hello-world/"/>
     <id>https://heitaoq66.github.io/2020/03/17/hello-world/</id>
     <published>2020-03-17T12:16:33.880Z</published>
-    <updated>2020-03-18T13:17:26.471Z</updated>
+    <updated>2020-03-18T13:18:19.028Z</updated>
     
     <summary type="html">
     
@@ -36,6 +36,8 @@
     </summary>
     
     
+    
+      <category term="test" scheme="https://heitaoq66.github.io/tags/test/"/>
     
   </entry>
   
