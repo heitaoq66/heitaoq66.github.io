@@ -10,6 +10,8 @@
 <li>官方文档在<a href="https://docs.konghq.com/" target="_blank" rel="noopener">这里</a></li>
 </ul>
 <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h2 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h2><h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><p>参考<a href="https://luanlengli.github.io/2019/05/20/PostgreSQL10安装部署和初始化.html" target="_blank" rel="noopener">PostgreSQL10安装部署和初始化</a></p>
+ <a id="more"></a>
+
 <h3 id="创建kong所需的数据库和用户"><a href="#创建kong所需的数据库和用户" class="headerlink" title="创建kong所需的数据库和用户"></a>创建kong所需的数据库和用户</h3><blockquote>
 <p>登录PostgreSQL数据库</p>
 </blockquote>
@@ -254,7 +256,7 @@
 <p>官方已经制作了grafana dashboard来展示Prometheus的数据</p>
 </blockquote>
 <p><a href="https://grafana.com/dashboards/7424" target="_blank" rel="noopener">Grafana Dashboard</a></p>
- <a id="more"></a>]]></content>
+]]></content>
       <categories>
         <category>微服务</category>
       </categories>
