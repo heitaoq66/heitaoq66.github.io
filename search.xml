@@ -17,8 +17,7 @@
 <li>OSS/BSS（Operation Support Systems and Business Support Systems）: Operator原有的管理系统。</li>
 <li>Service，VNF and Infrastructure Description：为NFV MANO提供数据存储管理的功能，数据包括VNF<br>deployment template，VNF-FG，service-related information和NFVI数据模型。</li>
 </ul>
-<p><strong>各个组成部分的连接关系：</strong></p>
-<ul>
+<h2 id="各个组成部分的连接关系："><a href="#各个组成部分的连接关系：" class="headerlink" title="各个组成部分的连接关系："></a>各个组成部分的连接关系：</h2><ul>
 <li>Virtualization Layer - Hardware Resources (Vi-Ha)： 连接 virtualization 层和硬件资源。为VNF创造一个不依赖于硬件资源的运行环境。</li>
 <li>VNF - NFV Infrastructure (Vn-Nf) ： 指的是由NFVI提供的供VNF运行的环境。</li>
 <li>NFV Orchestrator - VNF Manager (Or-Vnfm) ：将配置信息发给VNF manager，进一步由VNF manager控制VNF，使得VNF在VNF-FG中工作。同时收集VNF的信息，以供Network Service声明周期管理。</li>
