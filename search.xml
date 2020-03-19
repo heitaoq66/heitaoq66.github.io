@@ -254,7 +254,10 @@
 <p>官方已经制作了grafana dashboard来展示Prometheus的数据</p>
 </blockquote>
 <p><a href="https://grafana.com/dashboards/7424" target="_blank" rel="noopener">Grafana Dashboard</a></p>
-]]></content>
+ <a id="more"></a>]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
       <tags>
         <tag>微服务</tag>
       </tags>
