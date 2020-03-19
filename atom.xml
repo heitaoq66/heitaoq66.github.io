@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-19T02:31:23.638Z</updated>
+  <updated>2020-03-19T02:48:24.354Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kong API Gateway 部署</title>
+    <link href="https://heitaoq66.github.io/2020/03/19/Kong-API-Gateway-%E9%83%A8%E7%BD%B2/"/>
+    <id>https://heitaoq66.github.io/2020/03/19/Kong-API-Gateway-%E9%83%A8%E7%BD%B2/</id>
+    <published>2020-03-19T02:46:28.000Z</published>
+    <updated>2020-03-19T02:48:24.354Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;仅记录安装部署过程&lt;/li&gt;
+&lt;li&gt;操作系统使用的&lt;code&gt;CentOS-7.6.1810
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
