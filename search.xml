@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NFV MANO 架构</title>
+    <url>/2020/03/19/NFV%20MANO%20%E6%9E%B6%E6%9E%84/</url>
+    <content><![CDATA[<h1 id="NFV-架构："><a href="#NFV-架构：" class="headerlink" title="NFV 架构："></a><strong>NFV 架构：</strong></h1><p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145440385-333553730.png" alt="img"></p>
+<p>NFV MANO管理前面描述的VNF和NFVI的系统，这包括：<br>• NFVI中支持虚拟化的硬件和软件<br>• VNF的编排和声明周期管理</p>
+<h1 id="MANO-架构："><a href="#MANO-架构：" class="headerlink" title="MANO 架构："></a>MANO 架构：</h1><p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145604327-365403309.png" alt="img">   </p>
+<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145612672-1106193465.png" alt="img"></p>
+<ul>
+<li>VNF：前面已经描述过了，这里就不再叙述。</li>
+<li>EM（Element Management）：对一个多着多个VNF进行管理。注意NFVI只是提供VNF的运行环境，对VNF的管理还需要EM参与。</li>
+<li>VNF Manager(s)：作为NFV MANO的一部分，负责VNF的生命周期管理。VNF Manager可以存在多个。</li>
+<li>NFVI：前面已经描述过。</li>
+<li>VIM（Virtualized Infrastructure Manager）: 作为NFV MANO的一部分，管理支持虚拟化的硬件软件资源。包括权限管理，增加/回收VNF的资源，分析NFVI的故障，收集NFVI的信息等。VIM可以存在多个。</li>
+<li>NFV Orchestrator： 作为NFV MANO的一部分，管理和编排NFVI和软件资源，在NFVI上实现Network<br>Service。</li>
+<li>OSS/BSS（Operation Support Systems and Business Support Systems）: Operator原有的管理系统。</li>
+<li>Service，VNF and Infrastructure Description：为NFV MANO提供数据存储管理的功能，数据包括VNF<br>deployment template，VNF-FG，service-related information和NFVI数据模型。</li>
+</ul>
+<p><strong>各个组成部分的连接关系：</strong></p>
+<ul>
+<li>Virtualization Layer - Hardware Resources (Vi-Ha)： 连接 virtualization 层和硬件资源。为VNF创造一个不依赖于硬件资源的运行环境。</li>
+<li>VNF - NFV Infrastructure (Vn-Nf) ： 指的是由NFVI提供的供VNF运行的环境。</li>
+<li>NFV Orchestrator - VNF Manager (Or-Vnfm) ：将配置信息发给VNF manager，进一步由VNF manager控制VNF，使得VNF在VNF-FG中工作。同时收集VNF的信息，以供Network Service声明周期管理。</li>
+<li>Virtualized Infrastructure Manager - VNF Manager (Vi-Vnfm) ：由于VNF<br>Manager肩负着VNF的声明周期管理，这个连接是VNF Manager控制VNF资源的接口。同时也收集虚拟化资源配置和状态信息，供VNF使用。</li>
+<li>NFV Orchestrator -Virtualised Infrastructure Manager (Or-Vi) ：NFV<br>MANO不是简单的分层的关系，Orchestrator可以直接连接到VIM。这个连接也是资源的分配和保留，收集虚拟化资源的配置和状态信息。</li>
+<li>NFVI - VirtualisedInfrastructure Manager (Nf-Vi) ：具体的虚拟资源分配，同时收集NFVI的虚拟化资源的配置和状态信息</li>
+<li>OSS/BSS - NFVManagement and Orchestration (Os-Ma) ： OSS/BSS的接入点。</li>
+<li>VNF/EM - VNFManager (Ve-Vnfm) ： VNF Manager 管理VNF的接口，包括了VNF的生命周期管理，配置管理，收集VNF的状态信息，以供NetworkService生命周期管理使用。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>云</category>
+        <category>网络</category>
+      </categories>
+      <tags>
+        <tag>MANO</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>openstack学习-网络管理(转)</title>
     <url>/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/</url>
     <content><![CDATA[<p>openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。<br>设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则<br>实现上：充分利用linux中各种网络相关的技术</p>
