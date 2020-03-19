@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-19T03:28:27.628Z</updated>
+  <updated>2020-03-19T08:32:35.415Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>openstack学习-网络管理</title>
+    <link href="https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/"/>
+    <id>https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/</id>
+    <published>2020-03-19T08:18:12.000Z</published>
+    <updated>2020-03-19T08:32:35.415Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。&lt;br&gt;设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则&lt;br&gt;实现上：充分利用linux中各种网络相关的技术&lt;/p&gt;
+&lt;h1 id=&quot;物理网络与虚拟化网络&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="openstack" scheme="https://heitaoq66.github.io/tags/openstack/"/>
+    
+  </entry>
   
   <entry>
     <title>Kong API Gateway 部署</title>
