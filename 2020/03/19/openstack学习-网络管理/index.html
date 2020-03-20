@@ -81,13 +81,12 @@
 
 
 
-<meta name="description" content="openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则实现上：充分利用linux中各种网络相关的技术 物理网络与虚拟化网络 Neutron最为核心的工作是对二层物理网络的抽象与管理，物理服务器虚拟化后，虚拟机的网络功能由虚拟机网卡（vnic)提供，物理交换机也被虚拟化为虚拟交换机(vswitch)，各个vni">
+<meta name="description" content="openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则实现上：充分利用linux中各种网络相关的技术 物理网络与虚拟化网络![1](images&#x2F;openstack&#x2F;openstack学习-网络管理 &#x2F;1.png) Neutron最为核心的工作是对二层物理网络的抽象与管理，物理服务器虚拟化后，虚拟机的网络功能">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openstack学习-网络管理(转)">
 <meta property="og:url" content="https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/index.html">
 <meta property="og:site_name" content="传说中的黑桃Q">
-<meta property="og:description" content="openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则实现上：充分利用linux中各种网络相关的技术 物理网络与虚拟化网络 Neutron最为核心的工作是对二层物理网络的抽象与管理，物理服务器虚拟化后，虚拟机的网络功能由虚拟机网卡（vnic)提供，物理交换机也被虚拟化为虚拟交换机(vswitch)，各个vni">
-<meta property="og:image" content="https://s1.51cto.com/images/blog/201909/15/4761c3fe6eb8cea03476a69964d02cf7.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:description" content="openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则实现上：充分利用linux中各种网络相关的技术 物理网络与虚拟化网络![1](images&#x2F;openstack&#x2F;openstack学习-网络管理 &#x2F;1.png) Neutron最为核心的工作是对二层物理网络的抽象与管理，物理服务器虚拟化后，虚拟机的网络功能">
 <meta property="og:image" content="https://s1.51cto.com/images/blog/201909/15/eaf77d83e7f41c6c294d653d0c707aa9.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 <meta property="og:image" content="https://s1.51cto.com/images/blog/201909/15/7460ba85f310b06de11e34364af15d53.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 <meta property="og:image" content="https://s1.51cto.com/images/blog/201909/15/e1babcd90a35493afd5089f3f022a7b5.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
@@ -121,11 +120,11 @@
 <meta property="og:image" content="https://s1.51cto.com/images/blog/201909/16/03610f4ba384ad687e207a8167a00727.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 <meta property="og:image" content="https://s1.51cto.com/images/blog/201909/16/cea23cfdc1c4c81d86ab957ca7b75271.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 <meta property="article:published_time" content="2020-03-19T08:18:12.000Z">
-<meta property="article:modified_time" content="2020-03-19T08:34:13.339Z">
+<meta property="article:modified_time" content="2020-03-20T09:48:19.772Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="openstack">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s1.51cto.com/images/blog/201909/15/4761c3fe6eb8cea03476a69964d02cf7.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta name="twitter:image" content="https://s1.51cto.com/images/blog/201909/15/eaf77d83e7f41c6c294d653d0c707aa9.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 
 
 
@@ -454,7 +453,7 @@
 
       
         <p>openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。<br>设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则<br>实现上：充分利用linux中各种网络相关的技术</p>
-<h1 id="物理网络与虚拟化网络"><a href="#物理网络与虚拟化网络" class="headerlink" title="物理网络与虚拟化网络"></a>物理网络与虚拟化网络</h1><p><img src="https://s1.51cto.com/images/blog/201909/15/4761c3fe6eb8cea03476a69964d02cf7.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="openstack学习-网络管理"></p>
+<h1 id="物理网络与虚拟化网络"><a href="#物理网络与虚拟化网络" class="headerlink" title="物理网络与虚拟化网络"></a>物理网络与虚拟化网络</h1><p>![1](images/openstack/openstack学习-网络管理 /1.png)</p>
 <p>Neutron最为核心的工作是对二层物理网络的抽象与管理，物理服务器虚拟化后，虚拟机的网络功能由虚拟机网卡（vnic)提供，物理交换机也被虚拟化为虚拟交换机(vswitch)，各个vnic连接再vswitch的端口上，最后这些vswitch通过物理服务器的物理网卡访问外部的物理网络。</p>
 <h2 id="linux网络虚拟化实现技术"><a href="#linux网络虚拟化实现技术" class="headerlink" title="linux网络虚拟化实现技术"></a>linux网络虚拟化实现技术</h2><p>网络虚拟化主要由分为三个部分：<br>网卡虚拟化：TAP,TUN,VETH<br>交换机虚拟化：linux bridge,open vswitch<br>网络隔离：network-namespace</p>
 <h2 id="linux网卡虚拟化"><a href="#linux网卡虚拟化" class="headerlink" title="linux网卡虚拟化"></a>linux网卡虚拟化</h2><p><img src="https://s1.51cto.com/images/blog/201909/15/eaf77d83e7f41c6c294d653d0c707aa9.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="openstack学习-网络管理"><br>TAP设备：模拟一个二层的网络设备，可以接收和发送二层网络数据包<br>TUN设备：模拟一个三层的网络设备，可以接收和发送三层网络数据包<br>VETH:虚拟ethernet接口，通常以pair的方式出现，一端发出的网络数据包会被另一端接收，可以形成两个网桥之间的通道</p>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2020-03-20</lastmod>
+  </url>  <url>
     <loc>https://heitaoq66.github.io/2020/03/20/%E5%9F%BA%E4%BA%8Eaws%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BASQL-SERVER-Always-On%E7%BE%A4%E9%9B%86/</loc>
     <lastmod>2020-03-20</lastmod>
   </url>  <url>
@@ -14,9 +17,6 @@
     <lastmod>2020-03-19</lastmod>
   </url>  <url>
     <loc>https://heitaoq66.github.io/2020/03/19/NFV%20MANO%20%E6%9E%B6%E6%9E%84/</loc>
-    <lastmod>2020-03-19</lastmod>
-  </url>  <url>
-    <loc>https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2020-03-19</lastmod>
   </url>
 </urlset>
