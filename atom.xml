@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-19T09:43:24.240Z</updated>
+  <updated>2020-03-20T05:00:09.840Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AWS 预留实例RI 攻略</title>
+    <link href="https://heitaoq66.github.io/2020/03/20/AWS-%E9%A2%84%E7%95%99%E5%AE%9E%E4%BE%8BRI-%E6%94%BB%E7%95%A5/"/>
+    <id>https://heitaoq66.github.io/2020/03/20/AWS-%E9%A2%84%E7%95%99%E5%AE%9E%E4%BE%8BRI-%E6%94%BB%E7%95%A5/</id>
+    <published>2020-03-20T04:58:39.000Z</published>
+    <updated>2020-03-20T05:00:09.840Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;　预留实例（RI）是一种计费方式，并不是一种实例的类型，简单说就是一种”包年包月“的方式，通过RI我们最高可以获得相较于按需75%的优惠，进而降低您的云使用成本。您可能会说：“你说的这我都知道，并且RI我已经在用了。”
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="AWS" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/AWS/"/>
+    
+    
+      <category term="AWS" scheme="https://heitaoq66.github.io/tags/AWS/"/>
+    
+  </entry>
   
   <entry>
     <title>NFV MANO 架构</title>
@@ -80,17 +109,19 @@
     <link href="https://heitaoq66.github.io/2020/03/19/Kong-API-Gateway-%E9%83%A8%E7%BD%B2/"/>
     <id>https://heitaoq66.github.io/2020/03/19/Kong-API-Gateway-%E9%83%A8%E7%BD%B2/</id>
     <published>2020-03-19T02:46:28.000Z</published>
-    <updated>2020-03-19T03:28:27.628Z</updated>
+    <updated>2020-03-19T09:58:43.715Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h1&gt;&lt;ul&gt;
+      
+      
+        
+        
+          &lt;h1 id=&quot;说明&quot;&gt;&lt;a href=&quot;#说明&quot; class=&quot;headerlink&quot; title=&quot;说明&quot;&gt;&lt;/a&gt;说明&lt;/h1&gt;&lt;ul&gt;
 &lt;li&gt;仅记录安装部署过程&lt;/li&gt;
-&lt;li&gt;操作系统使用的&lt;code&gt;CentOS-7.6.1810 x86_64&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;kong版本为&lt;code&gt;1.1.2&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;官方文档在&lt;a href=&quot;https://docs.konghq.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;这里&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;环境准备&quot;&gt;&lt;a href=&quot;#环境准备&quot; class=&quot;headerlink&quot; title=&quot;环境准备&quot;&gt;&lt;/a&gt;环境准备&lt;/h1&gt;&lt;h2 id=&quot;PostgreSQL&quot;&gt;&lt;a href=&quot;#PostgreSQL&quot; class=&quot;headerlink&quot; title=&quot;PostgreSQL&quot;&gt;&lt;/a&gt;PostgreSQL&lt;/h2&gt;&lt;h3 id=&quot;安装过程&quot;&gt;&lt;a href=&quot;#安装过程&quot; class=&quot;headerlink&quot; title=&quot;安装过程&quot;&gt;&lt;/a&gt;安装过程&lt;/h3&gt;&lt;p&gt;参考&lt;a href=&quot;https://luanlengli.github.io/2019/05/20/PostgreSQL10安装部署和初始化.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;PostgreSQL10安装部署和初始化&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;操作系统使用的&lt;code&gt;CentOS-7.6.1810
+        
+      
     
     </summary>
     
