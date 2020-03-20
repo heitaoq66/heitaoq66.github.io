@@ -87,17 +87,11 @@
 <meta property="og:url" content="https://heitaoq66.github.io/2020/03/20/AWS-%E9%A2%84%E7%95%99%E5%AE%9E%E4%BE%8BRI-%E6%94%BB%E7%95%A5/index.html">
 <meta property="og:site_name" content="传说中的黑桃Q">
 <meta property="og:description" content="预留实例（RI）是一种计费方式，并不是一种实例的类型，简单说就是一种”包年包月“的方式，通过RI我们最高可以获得相较于按需75%的优惠，进而降低您的云使用成本。您可能会说：“你说的这我都知道，并且RI我已经在用了。” 您真的会使用RI吗？ 　　我们都知道预留实例（RI）类型分为两种 :标准RI 与可转换RI（CRI），可转换RI的价格往往较高而不容易被客户接受，而我们又经常遇到需要调整RI的需求">
-<meta property="og:image" content="https://img.xiumi.us/xmi/ua/21tlF/i/1986d3851f7305c68b80e9deca110061-sz_15513.png?x-oss-process=style/xmwebp">
-<meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104145632-1850216197.png">
-<meta property="og:image" content="https://img.xiumi.us/xmi/ua/21tlF/i/491ab0b90c86a839ca3fadaf105e7144-sz_26778.png?x-oss-process=style/xmwebp">
-<meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104623822-919955218.png">
-<meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104714455-2012969092.png">
 <meta property="article:published_time" content="2020-03-20T04:58:39.000Z">
-<meta property="article:modified_time" content="2020-03-20T05:00:09.840Z">
+<meta property="article:modified_time" content="2020-03-20T10:39:48.373Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="AWS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img.xiumi.us/xmi/ua/21tlF/i/1986d3851f7305c68b80e9deca110061-sz_15513.png?x-oss-process=style/xmwebp">
 
 
 
@@ -434,27 +428,27 @@
 <li>场景一</li>
 </ul>
 <p>假设您在北京区域购买了一个 m5.2xlarge类型 OS为Linux/Unix 的标准RI，并且您的账户在该区域有两个m5.xlarge实例在运行 ,那么两个实例将完全匹配。</p>
-<p><img src="https://img.xiumi.us/xmi/ua/21tlF/i/1986d3851f7305c68b80e9deca110061-sz_15513.png?x-oss-process=style/xmwebp" alt="img"></p>
+<p>![1](/images/AWS/AWS 预留实例RI 攻略/1.webp)</p>
 <ul>
 <li>场景二</li>
 </ul>
 <p>或者，如果您的账户在北京区域区域有一个 m5.4xlarge实例（ Linux/Unix），将匹配到 50% 的实例费用</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104145632-1850216197.png" alt="img"></p>
+<p>![2](/images/AWS/AWS 预留实例RI 攻略/2.png) </p>
 <ul>
 <li>场景三</li>
 </ul>
 <p>　　那么，有同学可能有比较刁钻的场景：如果我的账户在该区域有个m5.4xlarge实例（ Linux/Unix）在运行 ,且当前我有一个 m5.2xlarge的标准RI，一个m5.larged的标准RI，我是否需要重新购买m5.4xlarge的标准RI以进行匹配？</p>
 <p>这种场景下您的两个RI能够匹配到m5.4xlarge实例费用的75%，并且您只需再购买一个m5.larged的标准RI，这样就可以完全匹配，您无需重新购买m5.4xlarge的RI.</p>
-<p><img src="https://img.xiumi.us/xmi/ua/21tlF/i/491ab0b90c86a839ca3fadaf105e7144-sz_26778.png?x-oss-process=style/xmwebp" alt="img"></p>
+<p>![3](/images/AWS/AWS 预留实例RI 攻略/3.webp) </p>
 <h1 id="合并拆分"><a href="#合并拆分" class="headerlink" title="合并拆分"></a>合并拆分</h1><p>（场景：可用区范围RI）</p>
 <p>　　既然大小灵活性匹配这么方便那么我们为什么要进行合并拆分呢，这里要提醒的是，大小灵活性匹配，如果我们购买可用区范围RI，那么我们将失去大小灵活性匹配优势，这时候RI合并拆分就派上用场了，废话不多说，直接上例子:</p>
 <p> 场景四</p>
 <p>　　假设您在北京区域购买了两个 m5.2xlarge类型 OS为的cn-north-1a标准RI，由于计算需求改变，我们需要m5.4xlarge的实例以满足业务需求，那么我们可以将两个m5.2xlarge的RI合并成一个m5.4xlarge.</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104623822-919955218.png" alt="img"></p>
+<p>![4](/images/AWS/AWS 预留实例RI 攻略/4.png) </p>
 <p> 　同样我们也可以将m5.4xlarge 进行同实例类型的大小拆分。</p>
 <p>场景五</p>
 <p>　　那么当前又回到上面的场景三 ，您在北京区域有个m5.4xlarge实例(AZ cn-north-1a 范围)在运行 ,且当前我有一个 m5.2xlarge的标准RI，一个m5.xlarge的标准RI，那么这种情况下能不能再购买一个m5.xlarge 的标准RI进行合并操作呢？这种情况下则无法通过购买m5.xlarge 标准RI合并为m5.4xlarge 标准RI。</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104714455-2012969092.png" alt="img"></p>
+<p> ![5](/Users/shengjie/files/blog/themes/next/source/images/AWS/AWS 预留实例RI 攻略/5.png)</p>
 <p>这里就要提到标准RI拆分合并的限制：</p>
 <p>标准预留实例的合并，必须在相同的时间过期，换句话说，也就是该批实例必须是同期采购的相同期限的RI。</p>
 <h1 id="可转换RI（CRI）"><a href="#可转换RI（CRI）" class="headerlink" title="可转换RI（CRI）"></a>可转换RI（CRI）</h1><p>　　CRI在灵活匹配与合并拆分的基础上增加了更多维度可转换属性：<strong>实例类型、操作系统、租期、付款选项</strong>，当然价格可能可能上浮10个点左右。可以说CRI提供了最高的灵活可变性，几乎可满足所有的更变需求。唯一的限制：</p>

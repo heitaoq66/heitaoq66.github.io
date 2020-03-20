@@ -290,27 +290,27 @@
 <li>场景一</li>
 </ul>
 <p>假设您在北京区域购买了一个 m5.2xlarge类型 OS为Linux/Unix 的标准RI，并且您的账户在该区域有两个m5.xlarge实例在运行 ,那么两个实例将完全匹配。</p>
-<p><img src="https://img.xiumi.us/xmi/ua/21tlF/i/1986d3851f7305c68b80e9deca110061-sz_15513.png?x-oss-process=style/xmwebp" alt="img"></p>
+<p>![1](/images/AWS/AWS 预留实例RI 攻略/1.webp)</p>
 <ul>
 <li>场景二</li>
 </ul>
 <p>或者，如果您的账户在北京区域区域有一个 m5.4xlarge实例（ Linux/Unix），将匹配到 50% 的实例费用</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104145632-1850216197.png" alt="img"></p>
+<p>![2](/images/AWS/AWS 预留实例RI 攻略/2.png) </p>
 <ul>
 <li>场景三</li>
 </ul>
 <p>　　那么，有同学可能有比较刁钻的场景：如果我的账户在该区域有个m5.4xlarge实例（ Linux/Unix）在运行 ,且当前我有一个 m5.2xlarge的标准RI，一个m5.larged的标准RI，我是否需要重新购买m5.4xlarge的标准RI以进行匹配？</p>
 <p>这种场景下您的两个RI能够匹配到m5.4xlarge实例费用的75%，并且您只需再购买一个m5.larged的标准RI，这样就可以完全匹配，您无需重新购买m5.4xlarge的RI.</p>
-<p><img src="https://img.xiumi.us/xmi/ua/21tlF/i/491ab0b90c86a839ca3fadaf105e7144-sz_26778.png?x-oss-process=style/xmwebp" alt="img"></p>
+<p>![3](/images/AWS/AWS 预留实例RI 攻略/3.webp) </p>
 <h1 id="合并拆分"><a href="#合并拆分" class="headerlink" title="合并拆分"></a>合并拆分</h1><p>（场景：可用区范围RI）</p>
 <p>　　既然大小灵活性匹配这么方便那么我们为什么要进行合并拆分呢，这里要提醒的是，大小灵活性匹配，如果我们购买可用区范围RI，那么我们将失去大小灵活性匹配优势，这时候RI合并拆分就派上用场了，废话不多说，直接上例子:</p>
 <p> 场景四</p>
 <p>　　假设您在北京区域购买了两个 m5.2xlarge类型 OS为的cn-north-1a标准RI，由于计算需求改变，我们需要m5.4xlarge的实例以满足业务需求，那么我们可以将两个m5.2xlarge的RI合并成一个m5.4xlarge.</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104623822-919955218.png" alt="img"></p>
+<p>![4](/images/AWS/AWS 预留实例RI 攻略/4.png) </p>
 <p> 　同样我们也可以将m5.4xlarge 进行同实例类型的大小拆分。</p>
 <p>场景五</p>
 <p>　　那么当前又回到上面的场景三 ，您在北京区域有个m5.4xlarge实例(AZ cn-north-1a 范围)在运行 ,且当前我有一个 m5.2xlarge的标准RI，一个m5.xlarge的标准RI，那么这种情况下能不能再购买一个m5.xlarge 的标准RI进行合并操作呢？这种情况下则无法通过购买m5.xlarge 标准RI合并为m5.4xlarge 标准RI。</p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201911/1218771-20191119104714455-2012969092.png" alt="img"></p>
+<p> ![5](/Users/shengjie/files/blog/themes/next/source/images/AWS/AWS 预留实例RI 攻略/5.png)</p>
 <p>这里就要提到标准RI拆分合并的限制：</p>
 <p>标准预留实例的合并，必须在相同的时间过期，换句话说，也就是该批实例必须是同期采购的相同期限的RI。</p>
 <h1 id="可转换RI（CRI）"><a href="#可转换RI（CRI）" class="headerlink" title="可转换RI（CRI）"></a>可转换RI（CRI）</h1><p>　　CRI在灵活匹配与合并拆分的基础上增加了更多维度可转换属性：<strong>实例类型、操作系统、租期、付款选项</strong>，当然价格可能可能上浮10个点左右。可以说CRI提供了最高的灵活可变性，几乎可满足所有的更变需求。唯一的限制：</p>
@@ -334,10 +334,10 @@
   <entry>
     <title>NFV MANO 架构</title>
     <url>/2020/03/19/NFV%20MANO%20%E6%9E%B6%E6%9E%84/</url>
-    <content><![CDATA[<h1 id="NFV-架构："><a href="#NFV-架构：" class="headerlink" title="NFV 架构："></a><strong>NFV 架构：</strong></h1><p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145440385-333553730.png" alt="img"></p>
+    <content><![CDATA[<h1 id="NFV-架构："><a href="#NFV-架构：" class="headerlink" title="NFV 架构："></a><strong>NFV 架构：</strong></h1><p><img src="/images/SDN/NFV-MANO%E6%9E%B6%E6%9E%84/1.png" alt="1"></p>
 <p>NFV MANO管理前面描述的VNF和NFVI的系统，这包括：<br>• NFVI中支持虚拟化的硬件和软件<br>• VNF的编排和声明周期管理</p>
-<h1 id="MANO-架构："><a href="#MANO-架构：" class="headerlink" title="MANO 架构："></a>MANO 架构：</h1><p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145604327-365403309.png" alt="img">   </p>
-<p><img src="https://img2018.cnblogs.com/i-beta/1218771/201912/1218771-20191225145612672-1106193465.png" alt="img"></p>
+<h1 id="MANO-架构："><a href="#MANO-架构：" class="headerlink" title="MANO 架构："></a>MANO 架构：</h1><p>   <img src="/images/SDN/NFV-MANO%E6%9E%B6%E6%9E%84/2.png" alt="2"></p>
+<p><img src="/images/SDN/NFV-MANO%E6%9E%B6%E6%9E%84/3.png" alt="3"></p>
 <ul>
 <li>VNF：前面已经描述过了，这里就不再叙述。</li>
 <li>EM（Element Management）：对一个多着多个VNF进行管理。注意NFVI只是提供VNF的运行环境，对VNF的管理还需要EM参与。</li>
