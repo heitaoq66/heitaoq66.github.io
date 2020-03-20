@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-20T08:36:33.323Z</updated>
+  <updated>2020-03-20T08:38:51.083Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://heitaoq66.github.io/2020/03/20/%E5%9F%BA%E4%BA%8Eaws%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BASQL-SERVER-Always-On%E7%BE%A4%E9%9B%86/"/>
     <id>https://heitaoq66.github.io/2020/03/20/%E5%9F%BA%E4%BA%8Eaws%E5%B9%B3%E5%8F%B0%E6%9E%84%E5%BB%BASQL-SERVER-Always-On%E7%BE%A4%E9%9B%86/</id>
     <published>2020-03-20T08:19:02.000Z</published>
-    <updated>2020-03-20T08:36:33.323Z</updated>
+    <updated>2020-03-20T08:38:51.083Z</updated>
     
     <summary type="html">
     
@@ -35,6 +35,10 @@
     
     </summary>
     
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="AWS" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/AWS/"/>
     
     
   </entry>
