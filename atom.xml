@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-20T08:56:19.758Z</updated>
+  <updated>2020-03-26T02:28:10.614Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kubernetes挂载 网络存储</title>
+    <link href="https://heitaoq66.github.io/2020/03/26/Kubernetes%E6%8C%82%E8%BD%BD%20%E7%BD%91%E7%BB%9C%E5%AD%98%E5%82%A8/"/>
+    <id>https://heitaoq66.github.io/2020/03/26/Kubernetes%E6%8C%82%E8%BD%BD%20%E7%BD%91%E7%BB%9C%E5%AD%98%E5%82%A8/</id>
+    <published>2020-03-26T02:25:36.365Z</published>
+    <updated>2020-03-26T02:28:10.614Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;前情概要&quot;&gt;&lt;a href=&quot;#前情概要&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>基于aws平台构建SQL SERVER Always-On群集</title>
