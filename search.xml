@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux网卡设置为混杂模式</title>
+    <url>/2020/03/26/Linux%E7%BD%91%E5%8D%A1%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h1 id="混杂模式"><a href="#混杂模式" class="headerlink" title="混杂模式"></a>混杂模式</h1><p>网卡正常情况下，即非混杂混杂模式下，只接收目的地址是本机的数据包。在以太网上，有大量的数据包，但真正发送给自己的非常少，所以非混杂模式下可以极大的减轻网卡的处理负担。混杂模式（Promiscuous Mode）则是相反，网卡能够接收所有经过它的数据流，而不论其目的地址是否是它他。</p>
+<h1 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h1><p>当 NIC 收到以太网帧时，默认情况下，NIC 会检查目标 MAC 地址是否与 NIC 地址（或广播地址）匹配，如果 MAC 地址不匹配，则丢弃以太网帧。对于云宿主机，此行为是不可取的，因为帧可能用于其中一个实例。NIC 可以配置为<em>混杂模式</em>，即它们将所有以太网帧传递到操作系统，即使 MAC 地址不匹配也是如此。计算主机应始终配置适合混杂模式的 NIC</p>
+<p>有时候为嗅探到网络上的数据，需要将网卡设置到混杂模式。进入该模式将网络上的数据一并抓获，为此在设置nic的混杂模式的时候有诸多方法？</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>在Linux系统中，可以通过shell命令来实现：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ifconfig eth1 promisc 设置混杂模式</span><br><span class="line">ifconfig eth1 -promisc 取消混杂模式</span><br></pre></td></tr></table></figure>
+
+<p>是不是看起来很简单，看看执行后的效果：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost splaybow]# ifconfig</span><br><span class="line">eth6   Link encap:Ethernet HWaddr 08:00:27:70:1D:79  </span><br><span class="line">     inet6 addr: fe80::a00:27ff:fe70:1d79&#x2F;64 Scope:Link</span><br><span class="line">     UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1</span><br><span class="line">     RX packets:100124 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">     TX packets:8795 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">     collisions:0 txqueuelen:1000</span><br><span class="line">     RX bytes:12986638 (12.3 MiB) TX bytes:6452270 (6.1 MiB)</span><br><span class="line"></span><br><span class="line">[root@localhost splaybow]# ifconfig eth6 promisc</span><br><span class="line">[root@localhost splaybow]# ifconfig</span><br><span class="line">eth6   Link encap:Ethernet HWaddr 08:00:27:70:1D:79  </span><br><span class="line">     inet6 addr: fe80::a00:27ff:fe70:1d79&#x2F;64 Scope:Link</span><br><span class="line">     UP BROADCAST RUNNING PROMISC MULTICAST MTU:1500 Metric:1</span><br><span class="line">     RX packets:100154 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line">     TX packets:8795 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line">     collisions:0 txqueuelen:1000</span><br><span class="line">     RX bytes:13007885 (12.4 MiB) TX bytes:6452270 (6.1 MiB)</span><br><span class="line">[root@localhost splaybow]#</span><br></pre></td></tr></table></figure>
+
+<p>后面的网卡信息中，多了一个关键词，那就是：PROMISC！这就表示当前网卡已经工作在混杂模式下了。如果一个主机上有多块网卡，可以分别设置它们工作在混杂模式还是非混杂模式。</p>
+]]></content>
+      <categories>
+        <category>云</category>
+        <category>网络</category>
+      </categories>
+      <tags>
+        <tag>混杂模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Kubernetes 挂载网络存储</title>
     <url>/2020/03/26/Kubernetes%E6%8C%82%E8%BD%BD%20%E7%BD%91%E7%BB%9C%E5%AD%98%E5%82%A8/</url>
     <content><![CDATA[<h1 id="前情概要"><a href="#前情概要" class="headerlink" title="前情概要"></a>前情概要</h1><blockquote>
