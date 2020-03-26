@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Kubernetes挂载 网络存储</title>
+    <title>Kubernetes 挂载网络存储</title>
     <url>/2020/03/26/Kubernetes%E6%8C%82%E8%BD%BD%20%E7%BD%91%E7%BB%9C%E5%AD%98%E5%82%A8/</url>
     <content><![CDATA[<h1 id="前情概要"><a href="#前情概要" class="headerlink" title="前情概要"></a>前情概要</h1><blockquote>
 <p>这里引用阿里云的说明文档</p>
@@ -132,6 +132,12 @@
 </li>
 </ol>
 ]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
   </entry>
   <entry>
     <title>基于aws平台构建SQL SERVER Always-On群集</title>
