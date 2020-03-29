@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-03-26T13:31:31.018Z</updated>
+  <updated>2020-03-29T02:37:56.283Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>“申请免费SSL加密你的网站”</title>
+    <link href="https://heitaoq66.github.io/2020/03/29/%E2%80%9C%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E2%80%9D/"/>
+    <id>https://heitaoq66.github.io/2020/03/29/%E2%80%9C%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E2%80%9D/</id>
+    <published>2020-03-29T02:19:13.000Z</published>
+    <updated>2020-03-29T02:37:56.283Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;​       
+        
+      
+    
+    </summary>
+    
+    
+      <category term="Nginx" scheme="https://heitaoq66.github.io/categories/Nginx/"/>
+    
+    
+      <category term="Nginx" scheme="https://heitaoq66.github.io/tags/Nginx/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux网卡设置为混杂模式</title>

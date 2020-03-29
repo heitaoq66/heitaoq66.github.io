@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>“申请免费SSL加密你的网站”</title>
+    <url>/2020/03/29/%E2%80%9C%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E2%80%9D/</url>
+    <content><![CDATA[<p>​        近年来网站安全越来越被重视，Chrom也将http抛弃去拥抱https，浏览器左上角会提示不安全？想了想，不行，我也要搞个https来，我也要上锁！</p>
+<!--
+
+HTTP协议以明文方式发送内容，不提供任何方式的数据加密。为了数据传输的安全，HTTPS在HTTP的基础上加入了SSL协议，SSL依靠证书来验证服务器的身份，并为浏览器和服务器之间的通信加密。    
+
+-->
+
+
+
+<h2 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h2><p>在这里，我从 申请到 免费SSL <a href="https://freessl.cn/" target="_blank" rel="noopener">https://freessl.cn/</a> <img src="/images/nginx/%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99/1.png" alt="1"></p>
+<p>我是通过KeyManager 进行证书管理，可以将证书导出，也可进行一键部署，非常方便。下面我进行手动部署</p>
+<p><img src="/images/nginx/%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99/2.png" alt="2"></p>
+<h2 id="打开nginx配置文件"><a href="#打开nginx配置文件" class="headerlink" title="打开nginx配置文件"></a>打开nginx配置文件</h2><p>不知道nginx文件位置的话可以通过whereis nginx命令来查找。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-4836a1f40290caad00484ef0ba741db8_1440w.jpg" alt="img"></p>
+<p>我的配置文件在/ect/nginx，现在把刚才的两个证书文件复制过来，待会直接配置使用就行了。nginx的配置文件是nginx.conf，里面的配置内容有以下，为了容易明白，我都加上了注释。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 运行用户，默认即是nginx，可以不进行设置</span><br><span class="line">user  nginx;</span><br><span class="line">#Nginx进程，一般设置为和CPU核数一样</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#错误日志存放目录</span><br><span class="line">error_log  &#x2F;var&#x2F;log&#x2F;nginx&#x2F;error.log warn;</span><br><span class="line">#进程pid存放位置</span><br><span class="line">pid        &#x2F;var&#x2F;run&#x2F;nginx.pid;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024; # 单个后台进程的最大并发数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       &#x2F;etc&#x2F;nginx&#x2F;mime.types; #文件扩展名与类型映射表</span><br><span class="line">    default_type  application&#x2F;octet-stream; #默认文件类型</span><br><span class="line">    #设置日志模式</span><br><span class="line">    log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;</span><br><span class="line">                      &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;</span><br><span class="line">                      &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;</span><br><span class="line"></span><br><span class="line">    access_log  &#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log  main; #nginx访问日志存放位置</span><br><span class="line"></span><br><span class="line">    sendfile        on; #开启高效传输模式</span><br><span class="line">    #tcp_nopush     on; #减少网络报文段的数量</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65; #保持连接的时间，也叫超时时间</span><br><span class="line"></span><br><span class="line">    #gzip  on; #开启gzip压缩</span><br><span class="line"></span><br><span class="line">    include &#x2F;etc&#x2F;nginx&#x2F;conf.d&#x2F;*.conf; #包含的子配置项位置和文件</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致看一下就好了，这是全局配置。为了更好管理，我们还是在最后一行声明的/etc/nginx/conf.d文件夹里进行子项目配置。 打开里面的default.conf</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#设定虚拟主机配置</span><br><span class="line">server &#123;</span><br><span class="line">  #侦听443端口，这个是ssl访问端口</span><br><span class="line">  listen    443;</span><br><span class="line">  #定义使用 访问域名</span><br><span class="line">  server_name  XXX.com;</span><br><span class="line">  #定义服务器的默认网站根目录位置</span><br><span class="line">  root &#x2F;web&#x2F;www&#x2F;website&#x2F;dist;  </span><br><span class="line"></span><br><span class="line">  #设定本虚拟主机的访问日志</span><br><span class="line">  access_log  logs&#x2F;nginx.access.log  main;</span><br><span class="line"></span><br><span class="line">  # 这些都是腾讯云推荐的配置，直接拿来用就行了，只是修改证书的路径，注意这些路径是相对于&#x2F;etc&#x2F;nginx&#x2F;nginx.conf文件位置</span><br><span class="line">  ssl on;</span><br><span class="line">  ssl_certificate 1_XXX.com_bundle.crt;</span><br><span class="line">  ssl_certificate_key 2_XXX.com.key;</span><br><span class="line">  ssl_session_timeout 5m;</span><br><span class="line">  ssl_protocols TLSv1 TLSv1.1 TLSv1.2; #按照这个协议配置</span><br><span class="line">  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;#按照这个套件配置</span><br><span class="line">  ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">  #默认请求</span><br><span class="line">  location &#x2F; &#123;     </span><br><span class="line">  root &#x2F;web&#x2F;www&#x2F;website&#x2F;dist;      </span><br><span class="line">      #定义首页索引文件的名称</span><br><span class="line">      index index.html;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  #静态文件，nginx自己处理</span><br><span class="line">  location ~ ^&#x2F;(images|javascript|js|css|flash|media|static)&#x2F; &#123;</span><br><span class="line">      #过期30天，静态文件不怎么更新，过期可以设大一点，</span><br><span class="line">      #如果频繁更新，则可以设置得小一点。</span><br><span class="line">      expires 30d;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  #禁止访问 .htxxx 文件</span><br><span class="line">  #    location ~ &#x2F;.ht &#123;</span><br><span class="line">  #    deny all;</span><br><span class="line">  #&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">  # 80端口是http正常访问的接口</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name XXX.com;</span><br><span class="line">  # 在这里，我做了https全加密处理，在访问http的时候自动跳转到https</span><br><span class="line">  rewrite ^(.*) https:&#x2F;&#x2F;$host$1 permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>唔，配置基本就这些，挺简单的吧。小白福利。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-0dddfd928eae416ff8fde3c3c43d24f1_1440w.jpg" alt="img"></p>
+<p>然后我们配置文件写好后用nginx测试一下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic2.zhimg.com/80/v2-17dcc930eee3017abb81d60d1faa35cd_1440w.jpg" alt="img"></p>
+<p>妥妥的，这个过了后就能重启nginx生效了。</p>
+<blockquote>
+<p>这里需要注意下，导入新的证书后需要重启而不是重载，nginx -s reload是普通修改配置重载。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 停止nginx</span><br><span class="line">nginx -s stop</span><br><span class="line"># 启动</span><br><span class="line">nginx</span><br></pre></td></tr></table></figure>
+
+<p>重启后再次访问自己的网站，啧啧，完美，左上角加上锁，提示安全的连接。诶，搞定，开心。</p>
+<h2 id="nginx日常操作命令"><a href="#nginx日常操作命令" class="headerlink" title="nginx日常操作命令"></a>nginx日常操作命令</h2><ul>
+<li>nginx -t 测试配置文件</li>
+<li>nginx -s reload 修改配置后重载生效</li>
+<li>nginx -s reopen 重新打开日志文件</li>
+<li>nginx -s stop 快速停止</li>
+<li>nginx -s quit</li>
+</ul>
+<p>查看nginx进程 ps -ef | grep nginx</p>
+]]></content>
+      <categories>
+        <category>Nginx</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux网卡设置为混杂模式</title>
     <url>/2020/03/26/Linux%E7%BD%91%E5%8D%A1%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<h1 id="混杂模式"><a href="#混杂模式" class="headerlink" title="混杂模式"></a>混杂模式</h1><p>网卡正常情况下，即非混杂混杂模式下，只接收目的地址是本机的数据包。在以太网上，有大量的数据包，但真正发送给自己的非常少，所以非混杂模式下可以极大的减轻网卡的处理负担。混杂模式（Promiscuous Mode）则是相反，网卡能够接收所有经过它的数据流，而不论其目的地址是否是它他。</p>
