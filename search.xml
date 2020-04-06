@@ -1,6 +1,350 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CentOS 7二进制安装Kubernetes 1.10.5集群</title>
+    <url>/2020/04/06/CentOS%207%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E8%A3%85Kubernetes%201.10.5%E9%9B%86%E7%BE%A4/</url>
+    <content><![CDATA[<h1 id="一、集群规划"><a href="#一、集群规划" class="headerlink" title="一、集群规划"></a>一、集群规划</h1><p>​    集群节点为1主2从，如下表如示：</p>
+<p>*<em>master: *</em> </p>
+<p>master:master(192.168.8.201)</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>etcd</td>
+<td>3.3.8</td>
+<td>/usr/bin</td>
+</tr>
+<tr>
+<td>flannel</td>
+<td>0.10.0</td>
+<td>/opt/flannel/bin</td>
+</tr>
+<tr>
+<td>cni</td>
+<td>0.7.1</td>
+<td>/opt/cni/bin</td>
+</tr>
+<tr>
+<td>kubernetes</td>
+<td>1.10.5</td>
+<td>/usr/bin  kube-apiserver、kube-controller-manager、kube-scheduler</td>
+</tr>
+</tbody></table>
+<p><strong>node</strong>：</p>
+<p>node:slave-i(192.168.8.211),slave-ii(192.168.8.221)</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>etcd</td>
+<td>3.3.8</td>
+<td>/usr/bin</td>
+</tr>
+<tr>
+<td>flannel</td>
+<td>0.10.0</td>
+<td>/opt/flannel/bin</td>
+</tr>
+<tr>
+<td>cni</td>
+<td>0.7.1</td>
+<td>/opt/cni/bin</td>
+</tr>
+<tr>
+<td>kubernetes</td>
+<td>1.10.5</td>
+<td>/usr/bin  kubelet、kube-proxy</td>
+</tr>
+<tr>
+<td>docker</td>
+<td>18.03.1-ce</td>
+<td>/usr/bin</td>
+</tr>
+</tbody></table>
+<h1 id="二、安装包下载"><a href="#二、安装包下载" class="headerlink" title="二、安装包下载"></a>二、安装包下载</h1><pre><code>etcd：下载地址：https://github.com/coreos/etcd/releases/，下载3.3.8版本；
+flannel：下载地址：https://github.com/coreos/flannel/releases/，下载v0.10.0版本；
+cni：下载地址：https://github.com/containernetworking/plugins/releases，下载v0.7.1版本；
+kubernetes：下载地地址：https://github.com/kubernetes/kubernetes/releases，下载1.10.5版本；
+docker直接使用aliyun镜像安装，因此不用下载单独下载安装包。</code></pre><h1 id="三、服务器设置"><a href="#三、服务器设置" class="headerlink" title="三、服务器设置"></a>三、服务器设置</h1><h2 id="1、主机名修改"><a href="#1、主机名修改" class="headerlink" title="1、主机名修改"></a>1、主机名修改</h2><p>​    将主节点主机名修改为master，两从机主机名修改为slave-i和slave-ii。分别在master(192.168.8.201)，slave-i(192.168.8.211)，slave-ii(192.168.8.221)执行以下命令永久修改主机名：</p>
+<pre><code>hostnamectl --static set-hostname master
+hostnamectl --static set-hostname slave-i
+hostnamectl --static set-hostname slave-ii</code></pre><p>同时修改三个节点的/etc/hosts文件，增加以下三条：</p>
+<pre><code>192.168.8.201 master
+192.168.8.211 slave-i
+192.168.8.221 slave-ii</code></pre><p> 并增加127.0.0.1的主机名，master节点增加127.0.0.1 master，slave-i节点增加127.0.0.1 slave-i，slave-ii节点增加127.0.0.1 slave-ii，如下图如：</p>
+<p>master：</p>
+<p>  <img src="https://img-blog.csdn.net/20180717084855682?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p>  slave-i：</p>
+<p>  <img src="https://img-blog.csdn.net/20180717085019478?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p>  slave-ii：</p>
+<p>  <img src="https://img-blog.csdn.net/20180717085136878?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h2 id="2、防火墙设置"><a href="#2、防火墙设置" class="headerlink" title="2、防火墙设置"></a>2、防火墙设置</h2><p>如主机中未安装iptables，在三个主机中执行以下命令安装：</p>
+<pre><code>yum install iptables-services</code></pre><p> 执行iptables -L -n -v命令可以查看iptables配置，执行以下命令永久关闭三个主机的iptables：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">chkconfig iptables off</span><br></pre></td></tr></table></figure>
+
+<p>同时关闭三个主机的iptables和firewalld并设置开机不启动，执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl stop iptables</span><br><span class="line">systemctl disable iptables</span><br><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+
+<p>执行systemctl status iptables和systemctl status firewalld可以查看防火墙已经关闭。</p>
+<h2 id="3、selinux配置"><a href="#3、selinux配置" class="headerlink" title="3、selinux配置"></a>3、selinux配置</h2><p>可以通过getenforce或/usr/sbin/sestatus命令查看SELINUX配置，通过修改/etc/selinux/config文件中的SELINUX配置项来关闭selinux。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SELINUX&#x3D;disabled</span><br></pre></td></tr></table></figure>
+
+<p>如图：</p>
+<p>  <img src="https://img-blog.csdn.net/20180717085642113?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h2 id="4、关闭Swap分区"><a href="#4、关闭Swap分区" class="headerlink" title="4、关闭Swap分区"></a>4、关闭Swap分区</h2><p> 执行free -m命令可以查看swap分区情况。修改/etc/fstab配置文件，注释掉swap配置行。如图：</p>
+<p>  <img src="https://img-blog.csdn.net/20180717085820527?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h2 id="5、时钟同步"><a href="#5、时钟同步" class="headerlink" title="5、时钟同步"></a>5、时钟同步</h2><p> 执行以下命令安装ntpdate：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum install ntpdate</span><br></pre></td></tr></table></figure>
+
+<p>  执行以下命令同步时针：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ntpdate us.pool.ntp.org</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、安装etcd集群"><a href="#四、安装etcd集群" class="headerlink" title="四、安装etcd集群"></a>四、安装etcd集群</h1><p>从<a href="https://github.com/coreos/etcd/releases/下载etcd3.3.8版本，将其解压，并将二进制文件拷贝到/usr/bin目录下：" target="_blank" rel="noopener">https://github.com/coreos/etcd/releases/下载etcd3.3.8版本，将其解压，并将二进制文件拷贝到/usr/bin目录下：</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp etcd etcdctl &#x2F;usr&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<p>创建相关文件夹：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;var&#x2F;lib&#x2F;etcd &#x2F;etc&#x2F;etcd</span><br></pre></td></tr></table></figure>
+
+<p>以上两个命令在三个主机节点上都要执行。接下来配置三个主机节点的etcd配置文件，每个etcd服务器上只有两个配置文件：/usr/lib/systemd/system/etcd.service 和 /etc/etcd/etcd.conf</p>
+<h2 id="1、节点1-etcd-i"><a href="#1、节点1-etcd-i" class="headerlink" title="1、节点1(etcd-i)"></a>1、节点1(etcd-i)</h2><p><em>/usr/lib/systemd/system/etcd.service</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Etcd Server</span><br><span class="line">After&#x3D;network.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;notify</span><br><span class="line">WorkingDirectory&#x3D;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;etcd&#x2F;etcd.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;etcd</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p><em>/etc/etcd/etcd.conf</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># [member]</span><br><span class="line"># 节点名称</span><br><span class="line">ETCD_NAME&#x3D;etcd-i</span><br><span class="line"># 数据存放位置</span><br><span class="line">ETCD_DATA_DIR&#x3D;&quot;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;default.etcd&quot;</span><br><span class="line"># 监听其他Etcd实例的地址</span><br><span class="line">ETCD_LISTEN_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.201:2380&quot;</span><br><span class="line"># 监听客户端地址</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.201:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br><span class="line"> </span><br><span class="line">#[cluster]</span><br><span class="line"># 通知其他Etcd实例地址</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.201:2380&quot;</span><br><span class="line"># 初始化集群内节点地址</span><br><span class="line">ETCD_INITIAL_CLUSTER&#x3D;&quot;etcd-i&#x3D;http:&#x2F;&#x2F;192.168.8.201:2380,etcd-ii&#x3D;http:&#x2F;&#x2F;192.168.8.211:2380,etcd-iii&#x3D;http:&#x2F;&#x2F;192.168.8.221:2380&quot;</span><br><span class="line"># 初始化集群状态，new表示新建</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE&#x3D;&quot;new&quot;</span><br><span class="line"># 初始化集群token</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN&#x3D;&quot;etcd-cluster-token&quot;</span><br><span class="line"># 通知客户端地址</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.201:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、节点2-etcd-ii"><a href="#2、节点2-etcd-ii" class="headerlink" title="2、节点2(etcd-ii)"></a>2、节点2(etcd-ii)</h2><p><em>/usr/lib/systemd/system/etcd.service</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Etcd Server</span><br><span class="line">After&#x3D;network.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;notify</span><br><span class="line">WorkingDirectory&#x3D;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;etcd&#x2F;etcd.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;etcd</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p><em>/etc/etcd/etcd.conf</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># [member]</span><br><span class="line"># 节点名称</span><br><span class="line">ETCD_NAME&#x3D;etcd-ii</span><br><span class="line"># 数据存放位置</span><br><span class="line">ETCD_DATA_DIR&#x3D;&quot;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;default.etcd&quot;</span><br><span class="line"># 监听其他Etcd实例的地址</span><br><span class="line">ETCD_LISTEN_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.211:2380&quot;</span><br><span class="line"># 监听客户端地址</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.211:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br><span class="line"> </span><br><span class="line">#[cluster]</span><br><span class="line"># 通知其他Etcd实例地址</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.211:2380&quot;</span><br><span class="line"># 初始化集群内节点地址</span><br><span class="line">ETCD_INITIAL_CLUSTER&#x3D;&quot;etcd-i&#x3D;http:&#x2F;&#x2F;192.168.8.201:2380,etcd-ii&#x3D;http:&#x2F;&#x2F;192.168.8.211:2380,etcd-iii&#x3D;http:&#x2F;&#x2F;192.168.8.221:2380&quot;</span><br><span class="line"># 初始化集群状态，new表示新建</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE&#x3D;&quot;new&quot;</span><br><span class="line"># 初始化集群token</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN&#x3D;&quot;etcd-cluster-token&quot;</span><br><span class="line"># 通知客户端地址</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.211:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、节点3-etcd-iii"><a href="#3、节点3-etcd-iii" class="headerlink" title="3、节点3(etcd-iii)"></a>3、节点3(etcd-iii)</h2><p><em>/usr/lib/systemd/system/etcd.service</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Etcd Server</span><br><span class="line">After&#x3D;network.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;notify</span><br><span class="line">WorkingDirectory&#x3D;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;etcd&#x2F;etcd.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;etcd</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p><em>/etc/etcd/etcd.conf</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># [member]</span><br><span class="line"># 节点名称</span><br><span class="line">ETCD_NAME&#x3D;etcd-iii</span><br><span class="line"># 数据存放位置</span><br><span class="line">ETCD_DATA_DIR&#x3D;&quot;&#x2F;var&#x2F;lib&#x2F;etcd&#x2F;default.etcd&quot;</span><br><span class="line"># 监听其他Etcd实例的地址</span><br><span class="line">ETCD_LISTEN_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.221:2380&quot;</span><br><span class="line"># 监听客户端地址</span><br><span class="line">ETCD_LISTEN_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.221:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br><span class="line"> </span><br><span class="line">#[cluster]</span><br><span class="line"># 通知其他Etcd实例地址</span><br><span class="line">ETCD_INITIAL_ADVERTISE_PEER_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.221:2380&quot;</span><br><span class="line"># 初始化集群内节点地址</span><br><span class="line">ETCD_INITIAL_CLUSTER&#x3D;&quot;etcd-i&#x3D;http:&#x2F;&#x2F;192.168.8.201:2380,etcd-ii&#x3D;http:&#x2F;&#x2F;192.168.8.211:2380,etcd-iii&#x3D;http:&#x2F;&#x2F;192.168.8.221:2380&quot;</span><br><span class="line"># 初始化集群状态，new表示新建</span><br><span class="line">ETCD_INITIAL_CLUSTER_STATE&#x3D;&quot;new&quot;</span><br><span class="line"># 初始化集群token</span><br><span class="line">ETCD_INITIAL_CLUSTER_TOKEN&#x3D;&quot;etcd-cluster-token&quot;</span><br><span class="line"># 通知客户端地址</span><br><span class="line">ETCD_ADVERTISE_CLIENT_URLS&#x3D;&quot;http:&#x2F;&#x2F;192.168.8.221:2379,http:&#x2F;&#x2F;127.0.0.1:2379&quot;</span><br></pre></td></tr></table></figure>
+
+<p> etcd集群的主从节点关系与kubernetes集群的主从节点关系不是同的，etcd的配置文件只是表示三个etcd节点，etcd集群在启动和运行过程中会选举出主节点。因此，配置文件中体现的只是三个节点etcd-i，etcd-ii，etcd-iii。配置好三个节点的配置文件后，便可以启动etcd集群了，执行以下命令启动集群：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start etcd.service</span><br></pre></td></tr></table></figure>
+
+<p>执行命令时，不能等一台完全执行成功了再去下一台执行，因为etcd启动后会进行选举leader投票，如果各etcd启动间隔过大，会导致etcd集群启动失败。启动后可以执行以下命令检测集群:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">etcdctl member list</span><br><span class="line">etcdctl cluster-health</span><br></pre></td></tr></table></figure>
+
+<p>在node-i上执行etcdctl member list，输出如下，至此，etcd集群已经搭建完成</p>
+<p>  <img src="https://img-blog.csdn.net/20180717091455224?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h1 id="五、docker安装"><a href="#五、docker安装" class="headerlink" title="五、docker安装"></a>五、docker安装</h1><p>  docker安装参照阿里云教程安装，这里不再赘述，三个主机都安装。参照地址：<a href="https://yq.aliyun.com/articles/110806?spm=5176.8351553.0.0.44f01991b2jQwh" target="_blank" rel="noopener">https://yq.aliyun.com/articles/110806?spm=5176.8351553.0.0.44f01991b2jQwh</a></p>
+<h1 id="六、flannel安装"><a href="#六、flannel安装" class="headerlink" title="六、flannel安装"></a>六、flannel安装</h1><h2 id="1、安装flannel"><a href="#1、安装flannel" class="headerlink" title="1、安装flannel"></a>1、安装flannel</h2><p> 从<a href="https://github.com/coreos/flannel/releases/下载flannel" target="_blank" rel="noopener">https://github.com/coreos/flannel/releases/下载flannel</a> v0.10.0版本，将其解压到/opt/flannel/bin/。执行如下命令：</p>
+<pre><code>mkdir -p /opt/flannel/bin/
+tar -xzvf flannel-v0.10.0-linux-amd64.tar.gz -C /opt/flannel/bin/</code></pre><p>flannel包含flanneld 和 mk-docker-opts.sh两个可执行文件，接下来配置flannel配置文件：</p>
+<p><em>/usr/lib/systemd/system/flannel.service</em></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Flanneld overlay address etcd agent</span><br><span class="line">After&#x3D;network.target</span><br><span class="line">After&#x3D;network-online.target</span><br><span class="line">Wants&#x3D;network-online.target</span><br><span class="line">After&#x3D;etcd.service</span><br><span class="line">Before&#x3D;docker.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;notify</span><br><span class="line">ExecStart&#x3D;&#x2F;opt&#x2F;flannel&#x2F;bin&#x2F;flanneld -etcd-endpoints&#x3D;http:&#x2F;&#x2F;192.168.8.201:2379,http:&#x2F;&#x2F;192.168.8.211:2379,http:&#x2F;&#x2F;192.168.8.221:2379 -etcd-prefix&#x3D;coreos.com&#x2F;network</span><br><span class="line">ExecStartPost&#x3D;&#x2F;opt&#x2F;flannel&#x2F;bin&#x2F;mk-docker-opts.sh -d &#x2F;etc&#x2F;docker&#x2F;flannel_net.env -c</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br><span class="line">RequiredBy&#x3D;docker.service</span><br></pre></td></tr></table></figure>
+
+<p>flannel服务依赖etcd，必须先安装好etcd，并配置etcd服务地址-etcd-endpoints，-etcd-prefix是etcd存储的flannel网络配置的键前缀，执行以下命令设置flannel网络配置：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">etcdctl mk &#x2F;coreos.com&#x2F;network&#x2F;config &#39;&#123;&quot;Network&quot;:&quot;172.18.0.0&#x2F;16&quot;, &quot;SubnetMin&quot;: &quot;172.18.1.0&quot;, &quot;SubnetMax&quot;: &quot;172.18.254.0&quot;,  &quot;Backend&quot;: &#123;&quot;Type&quot;: &quot;vxlan&quot;&#125;&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<p>flannel服务依赖flannel镜像，所以要先下载flannel镜像，执行以下命令从阿里云下载，并创建镜像tag：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull registry.cn-beijing.aliyuncs.com&#x2F;k8s_images&#x2F;flannel:v0.10.0-amd64</span><br><span class="line">docker tag registry.cn-beijing.aliyuncs.com&#x2F;k8s_images&#x2F;flannel:v0.10.0-amd64 quay.io&#x2F;coreos&#x2F;flannel:v0.10.0</span><br></pre></td></tr></table></figure>
+
+<p> 接下来启动flannel服务，执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start flannel.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、修改docker配置"><a href="#2、修改docker配置" class="headerlink" title="2、修改docker配置"></a>2、修改docker配置</h2><p>在flannel配置文件中包含以下配置项：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ExecStartPost&#x3D;&#x2F;opt&#x2F;flannel&#x2F;bin&#x2F;mk-docker-opts.sh -d &#x2F;etc&#x2F;docker&#x2F;flannel_net.env -c</span><br></pre></td></tr></table></figure>
+
+<p>设置该配置后，会在flannel启动后执行mk-docker-opts.sh，并生成/etc/docker/flannel_net.env文件。flannel会修改docker网络，flannel_net.env是flannel生成的docker配置参数，因此，还要修改docker配置项。</p>
+<p>After：flannel启动之后再启动docker；</p>
+<p>EnvironmentFile：配置docker的启动参数，由flannel生成；</p>
+<p>ExecStart：增加docker启动参数；</p>
+<p>ExecStartPost：在docker启动之后执行，会修改主机的iptables路由规则。    </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Docker Application Container Engine</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;docs.docker.com</span><br><span class="line"># After&#x3D;network-online.target firewalld.service</span><br><span class="line">After&#x3D;network-online.target flannel.service</span><br><span class="line">Wants&#x3D;network-online.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;notify</span><br><span class="line"># the default is not to use systemd for cgroups because the delegate issues still</span><br><span class="line"># exists and systemd currently does not support the cgroup feature set required</span><br><span class="line"># for containers run by docker</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;docker&#x2F;flannel_net.env</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;dockerd $DOCKER_OPTS</span><br><span class="line">ExecReload&#x3D;&#x2F;bin&#x2F;kill -s HUP $MAINPID</span><br><span class="line">ExecStartPost&#x3D;&#x2F;usr&#x2F;sbin&#x2F;iptables -P FORWARD ACCEPT</span><br><span class="line"># Having non-zero Limit*s causes performance problems due to accounting overhead</span><br><span class="line"># in the kernel. We recommend using cgroups to do container-local accounting.</span><br><span class="line">LimitNOFILE&#x3D;infinity</span><br><span class="line">LimitNPROC&#x3D;infinity</span><br><span class="line">LimitCORE&#x3D;infinity</span><br><span class="line"># Uncomment TasksMax if your systemd version supports it.</span><br><span class="line"># Only systemd 226 and above support this version.</span><br><span class="line">#TasksMax&#x3D;infinity</span><br><span class="line">TimeoutStartSec&#x3D;0</span><br><span class="line"># set delegate yes so that systemd does not reset the cgroups of docker containers</span><br><span class="line">Delegate&#x3D;yes</span><br><span class="line"># kill only the docker process, not all processes in the cgroup</span><br><span class="line">KillMode&#x3D;process</span><br><span class="line"># restart the docker process if it exits prematurely</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">StartLimitBurst&#x3D;3</span><br><span class="line">StartLimitInterval&#x3D;60s</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>修改好配置文件后，执行以下命令启动flannel，并重启docker。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start flannel.service</span><br><span class="line">systemctl restart docker.service</span><br></pre></td></tr></table></figure>
+
+<p> 启动后可以执行ifconfig查看，已经多了flannel网络。</p>
+<p>  <img src="https://img-blog.csdn.net/20180717125242340?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p>  主节点和从节点都安装flannel和配置docker参数，并可以通过以下命令验证flannel和docker运行情况：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl status flannel</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
+
+<p>etcd、flannel、docker安装完成之后，便可以开始安装kubernetes集群了，在安装kubernetes集群之前先安装ca证书</p>
+<h1 id="七、CNI配置"><a href="#七、CNI配置" class="headerlink" title="七、CNI配置"></a>七、CNI配置</h1><p> 从<a href="https://github.com/containernetworking/plugins/releases下载flannel" target="_blank" rel="noopener">https://github.com/containernetworking/plugins/releases下载flannel</a> v0.7.1版本，将其解压到/opt/cni/bin。执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;opt&#x2F;cni&#x2F;bin &#x2F;etc&#x2F;cni&#x2F;net.d</span><br><span class="line">tar -xzvf cni-plugins-amd64-v0.7.1.tgz -C &#x2F;opt&#x2F;cni&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<p>增加cni配置文件/etc/cni/net.d/10-flannel.conflist，配置如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>:<span class="string">"cni0"</span>,</span><br><span class="line">  <span class="attr">"cniVersion"</span>:<span class="string">"0.3.1"</span>,</span><br><span class="line">  <span class="attr">"plugins"</span>:[</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"type"</span>:<span class="string">"flannel"</span>,</span><br><span class="line">      <span class="attr">"delegate"</span>:&#123;</span><br><span class="line">        <span class="attr">"forceAddress"</span>:<span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"isDefaultGateway"</span>:<span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"type"</span>:<span class="string">"portmap"</span>,</span><br><span class="line">      <span class="attr">"capabilities"</span>:&#123;</span><br><span class="line">        <span class="attr">"portMappings"</span>:<span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、安装CA证书"><a href="#八、安装CA证书" class="headerlink" title="八、安装CA证书"></a>八、安装CA证书</h1><p> (1)、为kube-apiserver生成一个数字证书，并用CA证书进行签名。<br> (2)、为kube-apiserver进程配置证书相关的启动参数，包括CA证书（用于验证客户端证书的签名真伪、自己的经过CA签名后的证书及私钥）。<br> (3)、为每个访问Kubernetes API Server的客户端（如kube-controller-manager、kube-scheduler、kubelet、kube-proxy及调用API Server的客户端程序kubectl等）进程生成自己的数字证书，也都用CA证书进行签名，在相关程序的启动参数中增加CA证书、自己的证书等相关参数。</p>
+<p>要生成的证书如下表：</p>
+<table>
+<thead>
+<tr>
+<th>根证书和私钥</th>
+<th>ca.crt、ca.key</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>kube-apiserver证书和私钥</td>
+<td>server.crt、server.key</td>
+</tr>
+<tr>
+<td>kube-controller-manager/kube-scheduler证书和私钥</td>
+<td>cs_client.crt、cs_client.key</td>
+</tr>
+<tr>
+<td>kubelet/kube-proxy证书和私钥</td>
+<td>kubelet_client.crt、kubelet_client.key</td>
+</tr>
+</tbody></table>
+<h2 id="1、master节点"><a href="#1、master节点" class="headerlink" title="1、master节点"></a>1、master节点</h2><p>  创建证书目录： </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;etc&#x2F;kubernetes&#x2F;ca</span><br></pre></td></tr></table></figure>
+
+<p> 执行以下命令生成相关证书和私钥：</p>
+<p>(1)、生成根证书和私钥:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    openssl genrsa -out ca.key 2048</span><br><span class="line">    openssl req -x509 -new -nodes -key ca.key -subj &quot;&#x2F;CN&#x3D;master&quot; -days 5000 -out ca.crt</span><br><span class="line">    &#x2F;CN为master 主机名</span><br></pre></td></tr></table></figure>
+
+<p>(2)、生成kube-apiserver证书和私钥:</p>
+<p>新建master_ssl.conf文件，配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[req]</span><br><span class="line">req_extensions &#x3D; v3_req</span><br><span class="line">distinguished_name &#x3D; req_distinguished_name</span><br><span class="line">[req_distinguished_name]</span><br><span class="line">[ v3_req ]</span><br><span class="line">basicConstraints &#x3D; CA:FALSE</span><br><span class="line">keyUsage &#x3D; nonRepudiation, digitalSignature, keyEncipherment</span><br><span class="line">subjectAltName &#x3D; @alt_names</span><br><span class="line">[alt_names]</span><br><span class="line">DNS.1 &#x3D; kubernetes</span><br><span class="line">DNS.2 &#x3D; kubernetes.default</span><br><span class="line">DNS.3 &#x3D; kubernetes.default.svc</span><br><span class="line">DNS.4 &#x3D; kubernetes.default.svc.cluster.local</span><br><span class="line">DNS.5 &#x3D; master						#master hostname</span><br><span class="line">IP.1 &#x3D; 172.18.0.1					#master clusterip 可通过kubectl get service获取</span><br><span class="line">IP.2 &#x3D; 192.168.8.201				#master ip</span><br></pre></td></tr></table></figure>
+
+<p>执行如下命令生成证书和私钥：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out server.key 2048</span><br><span class="line">openssl req -new -key server.key -subj &quot;&#x2F;CN&#x3D;master&quot; -config master_ssl.conf -out server.csr</span><br><span class="line">openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 5000 -extensions v3_req -extfile master_ssl.conf -out server.crt</span><br><span class="line"> &#x2F;CN为master 主机名</span><br></pre></td></tr></table></figure>
+
+<p>(3)、生成kube-controller-manager/kube-scheduler证书和私钥</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out cs_client.key 2048</span><br><span class="line">    openssl req -new -key cs_client.key -subj &quot;&#x2F;CN&#x3D;master&quot; -out cs_client.csr</span><br><span class="line">    openssl x509 -req -in cs_client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out cs_client.crt -days 5000</span><br><span class="line"></span><br><span class="line">    &#x2F;CN为master 主机名</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、node1节点-slave-i"><a href="#2、node1节点-slave-i" class="headerlink" title="2、node1节点(slave-i)"></a>2、node1节点(slave-i)</h2><p>创建证书目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;etc&#x2F;kubernetes&#x2F;ca</span><br></pre></td></tr></table></figure>
+
+<p>将master节点的根证书和私钥拷贝到该目录下，执行以下命令生成证书和私钥：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out kubelet_client.key 2048</span><br><span class="line">    openssl req -new -key kubelet_client.key -subj &quot;&#x2F;CN&#x3D;192.168.8.211&quot; -out kubelet_client.csr</span><br><span class="line">    openssl x509 -req -in kubelet_client.csr  -CA ca.crt -CAkey ca.key -CAcreateserial -out kubelet_client.crt -days 5000</span><br><span class="line"></span><br><span class="line">     &#x2F;CN为slave-i 的IP地址</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、node2节点-slave-ii"><a href="#3、node2节点-slave-ii" class="headerlink" title="3、node2节点(slave-ii)"></a>3、node2节点(slave-ii)</h2><p>创建证书目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;etc&#x2F;kubernetes&#x2F;ca</span><br></pre></td></tr></table></figure>
+
+<p>将master节点的根证书和私钥拷贝到该目录下，执行以下命令生成证书和私钥：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">openssl genrsa -out kubelet_client.key 2048</span><br><span class="line">    openssl req -new -key kubelet_client.key -subj &quot;&#x2F;CN&#x3D;192.168.8.221&quot; -out kubelet_client.csr</span><br><span class="line">    openssl x509 -req -in kubelet_client.csr  -CA ca.crt -CAkey ca.key -CAcreateserial -out kubelet_client.crt -days 5000</span><br><span class="line"></span><br><span class="line">     &#x2F;CN为slave-ii 的IP地址</span><br></pre></td></tr></table></figure>
+
+<h1 id="九、安装kubernetes集群"><a href="#九、安装kubernetes集群" class="headerlink" title="九、安装kubernetes集群"></a>九、安装kubernetes集群</h1><p> 安装好CA证书后，开始搭建kubernetes集群。</p>
+<p>master节点安装kube-apiserver、kube-controller-manager、kube-scheduler；node节点安装kubelet、kube-proxy。</p>
+<h2 id="1、master节点-1"><a href="#1、master节点-1" class="headerlink" title="1、master节点"></a>1、master节点</h2><p>  从<a href="https://github.com/kubernetes/kubernetes/releases下载kubernetes" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/releases下载kubernetes</a> v1.10.5版本。如下图，点击CHANGELOG-1.10.md链接到下载页面。</p>
+<p>  <img src="https://img-blog.csdn.net/20180717131825793?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p> 下载kubernetes-server-linux-amd64.tar.gz服务端安装包，将其解压，并将kubernetes/server/bin下的二进制文件拷贝到/usr/bin目录下。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp &#96;ls|egrep -v &quot;*.tar|*_tag&quot;&#96; &#x2F;usr&#x2F;bin&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>创建日志目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;var&#x2F;log&#x2F;kubernetes</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-、配置kube-apiserver"><a href="#1-、配置kube-apiserver" class="headerlink" title="(1)、配置kube-apiserver"></a>(1)、配置kube-apiserver</h3><p> /usr/lib/systemd/system/kube-apiserver.service</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Kubernetes API Server</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;github.com&#x2F;GoogleCloudPlatform&#x2F;kubernetes</span><br><span class="line">After&#x3D;etcd.service</span><br><span class="line">Wants&#x3D;etcd.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;apiserver.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;kube-apiserver $KUBE_API_ARGS</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">Type&#x3D;notify</span><br><span class="line">LimitNOFILE&#x3D;65536</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>/etc/kubernetes/apiserver.conf，–etcd-servers连接到etcd集群，关闭的非安全端口8080，并用secure-port开启安全端口6443，client-ca-file、tls-private-key-file、tls-cert-file配置CA证书，enable-admission-plugins开启准入权限，–anonymous-auth=false，不接受匿名访问，若为true，则表示接受，此处设置为false，便于dashboard访问。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">KUBE_API_ARGS&#x3D;&quot;\</span><br><span class="line">	--storage-backend&#x3D;etcd3 \</span><br><span class="line">	--etcd-servers&#x3D;http:&#x2F;&#x2F;192.168.8.201:2379,http:&#x2F;&#x2F;192.168.8.211:2379,http:&#x2F;&#x2F;192.168.8.221:2379 \</span><br><span class="line">	--bind-address&#x3D;0.0.0.0 \</span><br><span class="line">	--secure-port&#x3D;6443  \</span><br><span class="line">	--service-cluster-ip-range&#x3D;172.18.0.0&#x2F;16 \</span><br><span class="line">	--service-node-port-range&#x3D;1-65535 \</span><br><span class="line">	--kubelet-port&#x3D;10250 \</span><br><span class="line">	--advertise-address&#x3D;192.168.8.201 \</span><br><span class="line">	--allow-privileged&#x3D;false \</span><br><span class="line">	--anonymous-auth&#x3D;false \</span><br><span class="line">	--client-ca-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt \</span><br><span class="line">	--tls-private-key-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;server.key \</span><br><span class="line">	--tls-cert-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;server.crt \</span><br><span class="line">	--enable-admission-plugins&#x3D;NamespaceLifecycle,LimitRanger,NamespaceExists,SecurityContextDeny,ServiceAccount,DefaultStorageClass,ResourceQuota \</span><br><span class="line">	--logtostderr&#x3D;true \</span><br><span class="line">	--log-dir&#x3D;&#x2F;var&#x2F;log&#x2F;kubernets \</span><br><span class="line">	--v&#x3D;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-、配置kube-controller-manager"><a href="#2-、配置kube-controller-manager" class="headerlink" title="(2)、配置kube-controller-manager"></a>(2)、配置kube-controller-manager</h3><p>  配置kube-controller-config.yaml和kube-scheduler-config.yaml，分别在kube-controller-manager和kube-scheduler中引用该两文件，文件里配置了CA证书，配置如下：</p>
+<p>kube-controller-config.yaml：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Config</span><br><span class="line">users:</span><br><span class="line">- name: controller</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;cs_client.crt</span><br><span class="line">    client-key: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;cs_client.key</span><br><span class="line">clusters:</span><br><span class="line">- name: local</span><br><span class="line">  cluster:</span><br><span class="line">    certificate-authority: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: local</span><br><span class="line">    user: controller</span><br><span class="line">  name: default-context</span><br><span class="line">current-context: default-context</span><br></pre></td></tr></table></figure>
+
+<p> kube-scheduler-config.yaml：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Config</span><br><span class="line">users:</span><br><span class="line">- name: scheduler</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;cs_client.crt</span><br><span class="line">    client-key: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;cs_client.key</span><br><span class="line">clusters:</span><br><span class="line">- name: local</span><br><span class="line">  cluster:</span><br><span class="line">    certificate-authority: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: local</span><br><span class="line">    user: scheduler</span><br><span class="line">  name: default-context</span><br><span class="line">current-context: default-context</span><br></pre></td></tr></table></figure>
+
+<p> /usr/lib/systemd/system/kube-controller-manager.service</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Kubernetes Controller Manager</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;github.com&#x2F;GoogleCloudPlatform&#x2F;kubernetes</span><br><span class="line">After&#x3D;kube-apiserver.service</span><br><span class="line">Requires&#x3D;kube-apiserver.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;controller-manager.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;kube-controller-manager $KUBE_CONTROLLER_MANAGER_ARGS</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">LimitNOFILE&#x3D;65536</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p> /etc/kubernetes/controller-manager.conf，master连接到master节点，service-account-private-key-file、root-ca-file、cluster-signing-cert-file、cluster-signing-key-file配置CA证书，kubeconfig是配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">KUBE_CONTROLLER_MANAGER_ARGS&#x3D;&quot;\</span><br><span class="line">	--master&#x3D;https:&#x2F;&#x2F;192.168.8.201:6443 \</span><br><span class="line">	--service-account-private-key-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;server.key \</span><br><span class="line">	--root-ca-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt \</span><br><span class="line">	--cluster-signing-cert-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt \</span><br><span class="line">	--cluster-signing-key-file&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.key \</span><br><span class="line">	--kubeconfig&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;kube-controller-config.yaml \</span><br><span class="line">	--logtostderr&#x3D;true \</span><br><span class="line">	--log-dir&#x3D;&#x2F;var&#x2F;log&#x2F;kubernetes \</span><br><span class="line">	--v&#x3D;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-、配置kube-scheduler"><a href="#3-、配置kube-scheduler" class="headerlink" title="(3)、配置kube-scheduler"></a>(3)、配置kube-scheduler</h3><p> /usr/lib/systemd/system/kube-scheduler.service</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Kubernetes Scheduler</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;github.com&#x2F;GoogleCloudPlatform&#x2F;kubernetes</span><br><span class="line">After&#x3D;kube-apiserver.service</span><br><span class="line">Requires&#x3D;kube-apiserver.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">User&#x3D;root</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;scheduler.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;kube-scheduler $KUBE_SCHEDULER_ARGS</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">LimitNOFILE&#x3D;65536</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p> /etc/kubernetes/scheduler.conf，master连接到master节点，kubeconfig是配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">KUBE_SCHEDULER_ARGS&#x3D;&quot;\</span><br><span class="line">	--master&#x3D;https:&#x2F;&#x2F;192.168.8.201:6443 \</span><br><span class="line">	--kubeconfig&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;kube-scheduler-config.yaml \</span><br><span class="line">	--logtostderr&#x3D;true \</span><br><span class="line">	--log-dir&#x3D;&#x2F;var&#x2F;log&#x2F;kubernetes \</span><br><span class="line">	--v&#x3D;2</span><br></pre></td></tr></table></figure>
+
+<p>配置好配置文件后，执行以下命令启动master节点：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start kube-apiserver.service</span><br><span class="line">systemctl start kube-controller-manager.service</span><br><span class="line">systemctl start kube-scheduler.service</span><br></pre></td></tr></table></figure>
+
+<p>启动后可执行以下命令查看启动日志信息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  journalctl -xeu kube-apiserver --no-pager</span><br><span class="line">  journalctl -xeu kube-controller-manager --no-pager</span><br><span class="line">  journalctl -xeu kube-scheduler --no-pager</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、node节点"><a href="#2、node节点" class="headerlink" title="2、node节点"></a>2、node节点</h2><p>在server安装包的bin目录下已经包含了node节点的二进制文件，执行以下命令将二进制文件拷贝到/usr/bin目录下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cp kubectl kubelet kube-proxy &#x2F;usr&#x2F;bin&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>创建日志目录</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir -p &#x2F;var&#x2F;log&#x2F;kubernetes</span><br></pre></td></tr></table></figure>
+
+<p>创建/etc/sysctl.d/k8s.conf文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">touch &#x2F;etc&#x2F;sysctl.d&#x2F;k8s.conf</span><br></pre></td></tr></table></figure>
+
+<p>配置k8s.conf文件如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">net.bridge.bridge-nf-call-ip6tables &#x3D; 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables &#x3D; 1</span><br></pre></td></tr></table></figure>
+
+<p> 配置kubelet-config.yaml和proxy-config.yaml，分别在kubelet和kube-proxy中引用该两文件，文件里配置了CA证书，配置如下：</p>
+<p>kubelet-config.yaml：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Config</span><br><span class="line">users:</span><br><span class="line">- name: kubelet</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;kubelet_client.crt</span><br><span class="line">    client-key: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;kubelet_client.key</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt</span><br><span class="line">    server: https:&#x2F;&#x2F;192.168.0.11:6443</span><br><span class="line">  name: local</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: local</span><br><span class="line">    user: kubelet</span><br><span class="line">  name: default-context</span><br><span class="line">current-context: default-context</span><br><span class="line">preferences: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>proxy-config.yaml：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Config</span><br><span class="line">users:</span><br><span class="line">- name: proxy</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;kubelet_client.crt</span><br><span class="line">    client-key: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;kubelet_client.key</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: &#x2F;etc&#x2F;kubernetes&#x2F;ca&#x2F;ca.crt</span><br><span class="line">    server: https:&#x2F;&#x2F;192.168.0.11:6443</span><br><span class="line">  name: local</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: local</span><br><span class="line">    user: proxy</span><br><span class="line">  name: default-context</span><br><span class="line">current-context: default-context</span><br><span class="line">preferences: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-、配置kubelet"><a href="#1-、配置kubelet" class="headerlink" title="(1)、配置kubelet"></a>(1)、配置kubelet</h3><p>/usr/lib/systemd/system/kubelet.service</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Kubelet Server</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;github.com&#x2F;GoogleCloudPlatform&#x2F;kubernetes</span><br><span class="line">After&#x3D;docker.service</span><br><span class="line">Requires&#x3D;docker.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;kubelet.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;kubelet $KUBELET_ARGS</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p> /etc/kubernetes/kubelet.conf，hostname-override配置node我名称，这里使用node节点的IP，slave-i的IP为192.168.8.211，slave-ii的IP为192.168.8.221。pod-infra-container-image指定pause镜像，kubeconfig为配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">KUBELET_ARGS&#x3D;&quot;\</span><br><span class="line">	--kubeconfig&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;kubelet-config.yaml \</span><br><span class="line">	--pod-infra-container-image&#x3D;gcr.io&#x2F;google_containers&#x2F;pause-amd64:3.0 \</span><br><span class="line">	--hostname-override&#x3D;192.168.8.211 \</span><br><span class="line">	--network-plugin&#x3D;cni \</span><br><span class="line">	--cni-conf-dir&#x3D;&#x2F;etc&#x2F;cni&#x2F;net.d \</span><br><span class="line">	--cni-bin-dir&#x3D;&#x2F;opt&#x2F;cni&#x2F;bin \</span><br><span class="line">	--logtostderr&#x3D;true \</span><br><span class="line">	--log-dir&#x3D;&#x2F;var&#x2F;log&#x2F;kubernetes \</span><br><span class="line">	--v&#x3D;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-、配置kube-proxy"><a href="#2-、配置kube-proxy" class="headerlink" title="(2)、配置kube-proxy"></a>(2)、配置kube-proxy</h3><p>/usr/lib/systemd/system/kube-proxy.service</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Kube-Proxy Server</span><br><span class="line">Documentation&#x3D;https:&#x2F;&#x2F;github.com&#x2F;GoogleCloudPlatform&#x2F;kubernetes</span><br><span class="line">After&#x3D;network.target</span><br><span class="line">Requires&#x3D;network.service</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">EnvironmentFile&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;proxy.conf</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;kube-proxy $KUBE_PROXY_ARGS</span><br><span class="line">Restart&#x3D;on-failure</span><br><span class="line">LimitNOFILE&#x3D;65536</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>/etc/kubernetes/proxy.conf，hostname-override配置node我名称。要与kubelet对应，kubelet配置了，则kube-proxy也要配置。这里使用node节点的IP，slave-i的IP为192.168.8.211，slave-ii的IP为192.168.8.221。master连接master服务，kubeconfig为配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">KUBE_PROXY_ARGS&#x3D;&quot;\</span><br><span class="line">	--master&#x3D;https:&#x2F;&#x2F;192.168.8.201:6443 \</span><br><span class="line">	--hostname-override&#x3D;192.168.8.211 \</span><br><span class="line">	--kubeconfig&#x3D;&#x2F;etc&#x2F;kubernetes&#x2F;proxy-config.yaml \</span><br><span class="line">	--logtostderr&#x3D;true \</span><br><span class="line">	--log-dir&#x3D;&#x2F;var&#x2F;log&#x2F;kubernetes \</span><br><span class="line">	--v&#x3D;2&quot;</span><br></pre></td></tr></table></figure>
+
+<p>kubelet服务依赖二pause镜像，在启动kubelet前先要下载该镜像，执行以下命令下载和创建镜像tag:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com&#x2F;google-containers&#x2F;pause-amd64:3.0</span><br><span class="line">docker tag registry.cn-hangzhou.aliyuncs.com&#x2F;google-containers&#x2F;pause-amd64:3.0 gcr.io&#x2F;google_containers&#x2F;pause-amd64:3.0</span><br></pre></td></tr></table></figure>
+
+<p> 配置好配置文件后，执行以下命令启动master节点：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl start kubelet.service</span><br><span class="line">systemctl start kube-proxy.service</span><br></pre></td></tr></table></figure>
+
+<p>启动后可执行以下命令查看启动日志信息：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">journalctl -xeu kubelet --no-pager</span><br><span class="line">journalctl -xeu kube-proxy --no-pager</span><br></pre></td></tr></table></figure>
+
+<p>node节点启动后，可以在master节点查看node节点已经注册到集群里了，执行以下命令查看：</p>
+<p>  <img src="https://img-blog.csdn.net/201807171345494?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<h1 id="十、测试集群"><a href="#十、测试集群" class="headerlink" title="十、测试集群"></a>十、测试集群</h1><p>  这里启动了个nginx服务来测试集群。</p>
+<h2 id="1、创建rc"><a href="#1、创建rc" class="headerlink" title="1、创建rc"></a>1、创建rc</h2><p>  创建nginx-rc.yaml文件，配置如下，imagePullPolicy: IfNotPresent会下载nginx镜像：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ReplicationController</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-rc</span><br><span class="line">  labels:</span><br><span class="line">    name: nginx-rc</span><br><span class="line">spec:</span><br><span class="line">  replicas: 2</span><br><span class="line">  selector:</span><br><span class="line">    name: nginx-pod</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels: </span><br><span class="line">        name: nginx-pod</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx</span><br><span class="line">        imagePullPolicy: IfNotPresent</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、创建service"><a href="#2、创建service" class="headerlink" title="2、创建service"></a>2、创建service</h2><p>创建nginx-svc.yaml文件，配置如下，NodePort可以将服务端口映射到pod所在主机的端口上，因此可以在pod所在主机上访问服务：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">  labels: </span><br><span class="line">    name: nginx-service</span><br><span class="line">spec:</span><br><span class="line">  type: NodePort</span><br><span class="line">  ports:</span><br><span class="line">  - port: 80</span><br><span class="line">    protocol: TCP</span><br><span class="line">    targetPort: 80</span><br><span class="line">    nodePort: 30081</span><br><span class="line">  selector:</span><br><span class="line">    name: nginx-pod</span><br></pre></td></tr></table></figure>
+
+<p>执行以下命令启动rc和service：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kubectl create -f nginx-rc.yaml</span><br><span class="line"></span><br><span class="line">kubectl create -f nginx-svc.yaml</span><br></pre></td></tr></table></figure>
+
+<p>在master中执行以下命令，可以查看pod创建情况：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kubectl get pod -o wide</span><br></pre></td></tr></table></figure>
+
+<p>可以看到pod已经创建，并分配在node中</p>
+<p>  <img src="https://img-blog.csdn.net/20180717140120788?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p>可以在集群外，访问slave-i和slave-ii的30081端口访问nginx。</p>
+<p>  <a href="http://192.168.8.211:30081/" target="_blank" rel="noopener">http://192.168.8.211:30081/</a><br>  <a href="http://192.168.8.221:30081/" target="_blank" rel="noopener">http://192.168.8.221:30081/</a></p>
+<p>  返回nginx主页</p>
+<p>  <img src="https://img-blog.csdn.net/201807171404109?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NlYWxpcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>申请免费SSL加密你的网站</title>
     <url>/2020/03/29/%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99/</url>
     <content><![CDATA[<p>​        近年来网站安全越来越被重视，Chrom也将http抛弃去拥抱https，浏览器左上角会提示不安全？想了想，不行，我也要搞个https来，我也要上锁！</p>
