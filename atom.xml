@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-04-06T06:27:03.576Z</updated>
+  <updated>2020-04-06T09:25:36.109Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CNI容器网络接口</title>
+    <link href="https://heitaoq66.github.io/2020/04/06/CNI%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3/"/>
+    <id>https://heitaoq66.github.io/2020/04/06/CNI%E5%AE%B9%E5%99%A8%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3/</id>
+    <published>2020-04-06T09:22:31.000Z</published>
+    <updated>2020-04-06T09:25:36.109Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;CNI-简介&quot;&gt;&lt;a href=&quot;#CNI-简介&quot; class=&quot;headerlink&quot; title=&quot;CNI 简介&quot;&gt;&lt;/a&gt;CNI 简介&lt;/h2&gt;&lt;p&gt;不管是 docker 还是
+        
+      
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Kubernetes" scheme="https://heitaoq66.github.io/tags/Kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>CentOS 7二进制安装Kubernetes 1.10.5集群</title>
