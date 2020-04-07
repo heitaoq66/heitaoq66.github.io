@@ -324,29 +324,4 @@
     
   </entry>
   
-  <entry>
-    <title>Hello World</title>
-    <link href="https://heitaoq66.github.io/2020/03/17/hello-world/"/>
-    <id>https://heitaoq66.github.io/2020/03/17/hello-world/</id>
-    <published>2020-03-17T12:16:33.880Z</published>
-    <updated>2020-03-19T09:53:25.798Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
-        
-      
-    
-    </summary>
-    
-    
-    
-      <category term="test" scheme="https://heitaoq66.github.io/tags/test/"/>
-    
-  </entry>
-  
 </feed>
