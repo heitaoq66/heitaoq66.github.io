@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-04-07T07:17:12.984Z</updated>
+  <updated>2020-04-08T08:12:55.429Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux上实现VXLAN网络</title>
+    <link href="https://heitaoq66.github.io/2020/04/08/Linux%E4%B8%8A%E5%AE%9E%E7%8E%B0VXLAN%E7%BD%91%E7%BB%9C/"/>
+    <id>https://heitaoq66.github.io/2020/04/08/Linux%E4%B8%8A%E5%AE%9E%E7%8E%B0VXLAN%E7%BD%91%E7%BB%9C/</id>
+    <published>2020-04-08T08:10:03.000Z</published>
+    <updated>2020-04-08T08:12:55.429Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;linux-上-vxlan-简介&quot;&gt;&lt;a href=&quot;#linux-上-vxlan-简介&quot; class=&quot;headerlink&quot; title=&quot;linux 上 vxlan 简介&quot;&gt;&lt;/a&gt;linux 上 vxlan 简介&lt;/h2&gt;&lt;p&gt;这篇文章我们就讲讲在
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="vxlan" scheme="https://heitaoq66.github.io/tags/vxlan/"/>
+    
+  </entry>
   
   <entry>
     <title>什么是 istio</title>
