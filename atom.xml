@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-04-08T08:32:36.717Z</updated>
+  <updated>2020-04-09T10:39:06.194Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux AUFS 文件系统</title>
+    <link href="https://heitaoq66.github.io/2020/04/09/Linux-AUFS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
+    <id>https://heitaoq66.github.io/2020/04/09/Linux-AUFS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</id>
+    <published>2020-04-09T10:37:16.000Z</published>
+    <updated>2020-04-09T10:39:06.194Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;AUFS 的英文全称为 Advanced Mult-Layered Unification Filesystem，曾经是 Another Mult-Layered Unification Filesystem，显然，现在的内涵规格更高些。说明：本文的演示环境为
+        
+      
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="AUFS 容器" scheme="https://heitaoq66.github.io/tags/AUFS-%E5%AE%B9%E5%99%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux上实现VXLAN网络</title>

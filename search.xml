@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux AUFS 文件系统</title>
+    <url>/2020/04/09/Linux-AUFS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<p>AUFS 的英文全称为 Advanced Mult-Layered Unification Filesystem，曾经是 Another Mult-Layered Unification Filesystem，显然，现在的内涵规格更高些。说明：本文的演示环境为 ubuntu 16.04。</p>
+<h1 id="Union-File-System"><a href="#Union-File-System" class="headerlink" title="Union File System"></a>Union File System</h1><p>Union File System，简称 UnionFS，是一种为 Linux、FreeBSD 和 NetBSD 操作系统设计的，把其它文件系统联合到一个联合挂载点的文件系统服务。它使用 branch 把不同文件系统的文件和目录”透明地”覆盖，形成一个单一一致的文件系统。这些 branch 或者是 read-only 的，或者是 read-write 的，所以当对这个虚拟后的联合文件系统进行写操作的时候，系统是真正写到了一个新的文件中。看起来这个虚拟后的联合文件系统是可以对任何文件进行操作的，但是其实它并没有改变原来的文件。这是因为 Union File System 用到了一个重要的资源管理技术：写时复制。</p>
+<p>写时复制(copy-on-write，常被简写为 CoW)，也叫隐式共享，是一种提高资源使用效率的资源管理技术。它的思想是：如果一个资源是重复的，在没有对资源做出修改前，并不需要立即复制出一个新的资源实例，这个资源被不同的所有者共享使用。当任何一个所有者要对该资源做出修改时，复制出一个新的资源实例给该所有者进行修改，修改后的资源成为其所有者的私有资源。通过这种资源共享的方式，可以显著地减少复制相同资源带来的消耗，但是这样做也会在进行资源的修改时增加一部分开销。</p>
+<h1 id="创建-AUFS"><a href="#创建-AUFS" class="headerlink" title="创建 AUFS"></a>创建 AUFS</h1><p>我们可以通过 mount 命令手动创建 AUFS，接下来我们就用这种方式来演示 AUFS 的主要特征。</p>
+<p><strong>创建演示用的目录和文件</strong><br>先创建一个名称为 aufs 的文件夹用作实验目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mkdir aufs</span><br></pre></td></tr></table></figure>
+
+<p>然后在 aufs 中创建名称为 mnt 的目录作为文件系统的挂载点：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mkdir aufs&#x2F;mnt</span><br></pre></td></tr></table></figure>
+
+<p>接下来在 aufs 目录下创建 container-layer 文件夹(模拟容器的读写层)，并且在文件夹中创建文件 container-layer.txt，文件的内容初始化为 “I am container layer”：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mkdir aufs&#x2F;container-layer</span><br><span class="line">$ echo &quot;I am container layer&quot; &gt; aufs&#x2F;container-layer&#x2F;container-layer.txt</span><br></pre></td></tr></table></figure>
+
+<p>最后在 aufs 目录下创建三个文件夹 image-layer1、image-layer2、image-layer3(用它们来模拟容器的镜像层)。在这三个文件夹中分别创建文件，并初始化为对应的内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ mkdir aufs&#x2F;&#123;image-layer1,image-layer2,image-layer3&#125;</span><br><span class="line">$ echo &quot;I am image layer 1&quot; &gt; aufs&#x2F;image-layer1&#x2F;image-layer1.txt</span><br><span class="line">$ echo &quot;I am image layer 2&quot; &gt; aufs&#x2F;image-layer2&#x2F;image-layer2.txt</span><br><span class="line">$ echo &quot;I am image layer 3&quot; &gt; aufs&#x2F;image-layer3&#x2F;image-layer3.txt</span><br></pre></td></tr></table></figure>
+
+<p>准备的目录和文件结构如下图所示：</p>
+<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130104738-1960037197.png" alt="img"></p>
+<p><strong>创建 AUFS 文件系统</strong><br>mount 是一个非常强大的命令，我们可以用它来创建 AUFS 文件系统。下面的命令把 container-layer、image-layer1、image-layer2、image-layer3 以 AUFS 的方式挂载到刚才创建的 mnt 目录下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd aufs</span><br><span class="line">$ sudo mount -t aufs -o dirs&#x3D;.&#x2F;container-layer:.&#x2F;image-layer1:.&#x2F;image-layer2:.&#x2F;image-layer3 none .&#x2F;mnt</span><br></pre></td></tr></table></figure>
+
+<p>挂载完成后可以看到 mnt 目录下的文件结构为：</p>
+<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130142171-446323469.png" alt="img"></p>
+<p>注意，在 mount 命令中我们没有指定要挂载的 4 个文件夹的权限信息，其默认行为是：dirs 指定的左边起第一个目录是 read-write 权限，后续目录都是 read-only 权限。我们可以通过下面的方式查看详情：</p>
+<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130235389-715337838.png" alt="img"></p>
+<p>其中的 si_99b90cdd124201eb 目录是系统为 mnt 这个挂载点创建的，从上图中我们可以清楚的看到各个目录的挂载权限。</p>
+<p><strong>验证写时复制</strong><br>下面让我们向 mnt/image-layer2.txt 文件中写入些数据，看看会发生什么变化？</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ echo &quot;I changed mnt&#x2F;image-layer2.txt&quot; &gt;&gt; mnt&#x2F;image-layer2.txt</span><br></pre></td></tr></table></figure>
+
+<p>查看 mnt/image-layer2.txt 的内容，发现已经变化了：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">I am image layer 2</span><br><span class="line">I changed mnt&#x2F;image-layer2.txt</span><br></pre></td></tr></table></figure>
+
+<p>再去看看 image-layer2/image-layer2.txt，发现它的内容没有变化，还是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">I am image layer 2</span><br></pre></td></tr></table></figure>
+
+<p>原因在哪里呢？去 container-layer 目录下看看：</p>
+<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130327312-13251764.png" alt="img"></p>
+<p>这里多了一个 image-layer2.txt 文件，其内容如下：</p>
+<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130356922-480929107.png" alt="img"></p>
+<p>原来，当尝试向 mnt/image-layer2.txt 中写入文件时，系统首先在 mnt 目录下查找名为 image-layer2.txt 的文件，将其拷贝到 read-write 层的 container-layer 目录中，接着对 container-layer 目录中的 image-layer2.txt 的文件进行写操作。这个过程也就是 AUFS 的实际工作原理。</p>
+<p>至此，我们完成了一个简单的 AUFS demo。可以看出 AUFS 的原理并不是很复杂，但是当与容器技术相结合后，就展示出来超强的魅力，并成为初代 docker 默认的存储驱动。虽然当前 docker 默认的存储驱动已经演进到了 overlay2，但是学习 AUFS 依然可以帮助我们深入理解 docker 中的文件系统。</p>
+<p><strong>参考：</strong><br><a href="https://en.wikipedia.org/wiki/Aufs" target="_blank" rel="noopener">维基百科 AUFS</a><br><a href="https://www.thegeekstuff.com/2013/05/linux-aufs/" target="_blank" rel="noopener">Linux AuFS Examples</a><br><a href="http://aufs.sourceforge.net/" target="_blank" rel="noopener">AUFS Source Code</a><br><a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank" rel="noopener">Docker Use the AUFS storage driver</a></p>
+]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
+      <tags>
+        <tag>AUFS 容器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux上实现VXLAN网络</title>
     <url>/2020/04/08/Linux%E4%B8%8A%E5%AE%9E%E7%8E%B0VXLAN%E7%BD%91%E7%BB%9C/</url>
     <content><![CDATA[<h2 id="linux-上-vxlan-简介"><a href="#linux-上-vxlan-简介" class="headerlink" title="linux 上 vxlan 简介"></a>linux 上 vxlan 简介</h2><p>这篇文章我们就讲讲在 linux 机器上怎么手动搭建 vxlan overlay 网络。</p>
