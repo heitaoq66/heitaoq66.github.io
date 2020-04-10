@@ -87,17 +87,17 @@
 <meta property="og:url" content="https://heitaoq66.github.io/2020/04/09/Linux-AUFS-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="传说中的黑桃Q">
 <meta property="og:description" content="AUFS 的英文全称为 Advanced Mult-Layered Unification Filesystem，曾经是 Another Mult-Layered Unification Filesystem，显然，现在的内涵规格更高些。说明：本文的演示环境为 ubuntu 16.04。 Union File SystemUnion File System，简称 UnionFS，是一种为 Linu">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130104738-1960037197.png">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130142171-446323469.png">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130235389-715337838.png">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130327312-13251764.png">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130356922-480929107.png">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000434_h4vexi.png">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000435_cwvsif.png">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000436_pljwjc.png">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000437_f9bqm5.png">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429281/Docker/AUFS/ia_100000438_k8td6l.png">
 <meta property="article:published_time" content="2020-04-09T10:37:16.000Z">
-<meta property="article:modified_time" content="2020-04-09T10:44:22.820Z">
+<meta property="article:modified_time" content="2020-04-09T10:49:59.094Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="AUFS 容器">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130104738-1960037197.png">
+<meta name="twitter:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000434_h4vexi.png">
 
 
 
@@ -442,14 +442,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir aufs&#x2F;&#123;image-layer1,image-layer2,image-layer3&#125;</span><br><span class="line">$ echo &quot;I am image layer 1&quot; &gt; aufs&#x2F;image-layer1&#x2F;image-layer1.txt</span><br><span class="line">$ echo &quot;I am image layer 2&quot; &gt; aufs&#x2F;image-layer2&#x2F;image-layer2.txt</span><br><span class="line">$ echo &quot;I am image layer 3&quot; &gt; aufs&#x2F;image-layer3&#x2F;image-layer3.txt</span><br></pre></td></tr></table></figure>
 
 <p>准备的目录和文件结构如下图所示：</p>
-<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130104738-1960037197.png" alt="img"> </p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000434_h4vexi.png" alt="img"> </p>
 <p><strong>创建 AUFS 文件系统</strong><br>mount 是一个非常强大的命令，我们可以用它来创建 AUFS 文件系统。下面的命令把 container-layer、image-layer1、image-layer2、image-layer3 以 AUFS 的方式挂载到刚才创建的 mnt 目录下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd aufs</span><br><span class="line">$ sudo mount -t aufs -o dirs&#x3D;.&#x2F;container-layer:.&#x2F;image-layer1:.&#x2F;image-layer2:.&#x2F;image-layer3 none .&#x2F;mnt</span><br></pre></td></tr></table></figure>
 
 <p>挂载完成后可以看到 mnt 目录下的文件结构为：</p>
-<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130142171-446323469.png" alt="img"> </p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000435_cwvsif.png" alt="img"> </p>
 <p>注意，在 mount 命令中我们没有指定要挂载的 4 个文件夹的权限信息，其默认行为是：dirs 指定的左边起第一个目录是 read-write 权限，后续目录都是 read-only 权限。我们可以通过下面的方式查看详情：</p>
-<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130235389-715337838.png" alt="img"> </p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000436_pljwjc.png" alt="img"> </p>
 <p>其中的 si_99b90cdd124201eb 目录是系统为 mnt 这个挂载点创建的，从上图中我们可以清楚的看到各个目录的挂载权限。</p>
 <p><strong>验证写时复制</strong><br>下面让我们向 mnt/image-layer2.txt 文件中写入些数据，看看会发生什么变化？</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo &quot;I changed mnt&#x2F;image-layer2.txt&quot; &gt;&gt; mnt&#x2F;image-layer2.txt</span><br></pre></td></tr></table></figure>
@@ -461,9 +461,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I am image layer 2</span><br></pre></td></tr></table></figure>
 
 <p>原因在哪里呢？去 container-layer 目录下看看：</p>
-<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130327312-13251764.png" alt="img"> </p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586429275/Docker/AUFS/ia_100000437_f9bqm5.png" alt="img"> </p>
 <p>这里多了一个 image-layer2.txt 文件，其内容如下：</p>
-<p><img src="https://img2018.cnblogs.com/blog/952033/201907/952033-20190724130356922-480929107.png" alt="img"> </p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586429281/Docker/AUFS/ia_100000438_k8td6l.png" alt="img"> </p>
 <p>原来，当尝试向 mnt/image-layer2.txt 中写入文件时，系统首先在 mnt 目录下查找名为 image-layer2.txt 的文件，将其拷贝到 read-write 层的 container-layer 目录中，接着对 container-layer 目录中的 image-layer2.txt 的文件进行写操作。这个过程也就是 AUFS 的实际工作原理。</p>
 <p>至此，我们完成了一个简单的 AUFS demo。可以看出 AUFS 的原理并不是很复杂，但是当与容器技术相结合后，就展示出来超强的魅力，并成为初代 docker 默认的存储驱动。虽然当前 docker 默认的存储驱动已经演进到了 overlay2，但是学习 AUFS 依然可以帮助我们深入理解 docker 中的文件系统。</p>
 <p><strong>参考：</strong><br><a href="https://en.wikipedia.org/wiki/Aufs" target="_blank" rel="noopener">维基百科 AUFS</a><br><a href="https://www.thegeekstuff.com/2013/05/linux-aufs/" target="_blank" rel="noopener">Linux AuFS Examples</a><br><a href="http://aufs.sourceforge.net/" target="_blank" rel="noopener">AUFS Source Code</a><br><a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank" rel="noopener">Docker Use the AUFS storage driver</a></p>
