@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-04-09T10:49:59.094Z</updated>
+  <updated>2020-04-21T11:01:37.781Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux 网络虚拟化： network namespace 简介</title>
+    <link href="https://heitaoq66.github.io/2020/04/21/linux-%E7%BD%91%E7%BB%9C%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9A-network-namespace-%E7%AE%80%E4%BB%8B/"/>
+    <id>https://heitaoq66.github.io/2020/04/21/linux-%E7%BD%91%E7%BB%9C%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9A-network-namespace-%E7%AE%80%E4%BB%8B/</id>
+    <published>2020-04-21T11:01:03.000Z</published>
+    <updated>2020-04-21T11:01:37.781Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;network namespace 是实现网络虚拟化的重要功能，它能创建多个隔离的网络空间，它们有独自的网络栈信息。不管是虚拟机还是容器，运行的时候仿佛自己就在独立的网络中。这篇文章介绍 network namespace 的基本概念和用法，network
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="vxlan" scheme="https://heitaoq66.github.io/tags/vxlan/"/>
+    
+  </entry>
   
   <entry>
     <title>Linux AUFS 文件系统</title>
