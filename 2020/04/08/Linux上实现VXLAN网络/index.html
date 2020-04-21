@@ -95,7 +95,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586334268/vxlan/ia_1300001343_wdjasi.jpg">
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1586334721/vxlan/006tKfTcgy1fjy55xwqxuj31hc0u0gqo_apbqdp.jpg">
 <meta property="article:published_time" content="2020-04-08T08:10:03.000Z">
-<meta property="article:modified_time" content="2020-04-08T08:32:36.717Z">
+<meta property="article:modified_time" content="2020-04-21T11:05:04.819Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="vxlan">
 <meta name="twitter:card" content="summary">
@@ -539,7 +539,7 @@
 <h3 id="利用-bridge-来接入容器"><a href="#利用-bridge-来接入容器" class="headerlink" title="利用 bridge 来接入容器"></a>利用 bridge 来接入容器</h3><p>尽管上面的方法能够通过多播实现自动化的 overlay 网络构建，但是通信的双方只有 vtep，在实际的生产中，每台主机上都有几十台甚至上百台的虚拟机或者容器需要通信，因此我们需要找到一种方法能够把这些通信实体组织起来。</p>
 <p>在 linux 中把同一个网段的 interface 组织起来正是网桥（bridge，或者 switch，这两个名称等价）的功能，因此这部分我们介绍如何用网桥把多个虚拟机或者容器放到同一个 vxlan overlay 网络中。最终实现的网络架构如下图所示：</p>
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1586334270/vxlan/ia_1300001342_pyxupk.jpg" alt="img"></p>
-<p>因为创建虚拟机或者容器比较麻烦，我们用 network namespace 来模拟，从理论上它们是一样的。关于 network namespace 和 veth pair 的基础知识，请参考我<a href="https://cizixs.com/2017/02/10/network-virtualization-network-namespace" target="_blank" rel="noopener">之前的介绍文章</a>。</p>
+<p>因为创建虚拟机或者容器比较麻烦，我们用 network namespace 来模拟，从理论上它们是一样的。关于 network namespace 和 veth pair 的基础知识，请参考我<a href="[https://heitaoq66.github.io/2020/04/21/linux-%E7%BD%91%E7%BB%9C%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9A-network-namespace-%E7%AE%80%E4%BB%8B/](https://heitaoq66.github.io/2020/04/21/linux-网络虚拟化：-network-namespace-简介/)">的介绍文章</a>。</p>
 <p>对于每个容器/虚拟机，我们创建一个 network namespace，并通过一对 veth pair 把容器中的 eth0 网络连接到网桥上。同时 vtep 也会放到网桥上，以便能够对报文进行 vxlan 相关的处理。</p>
 <p>首先我们创建 vtep interface，使用的是多播模式：</p>
 <p>创建 vtep interface：</p>
