@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>linux 网络虚拟化： network namespace 简介</title>
-    <url>/2020/04/21/linux-%E7%BD%91%E7%BB%9C%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9A-network-namespace-%E7%AE%80%E4%BB%8B/</url>
+    <url>/2020/05/05/linux-%E7%BD%91%E7%BB%9C%E8%99%9A%E6%8B%9F%E5%8C%96%EF%BC%9A-network-namespace-%E7%AE%80%E4%BB%8B/</url>
     <content><![CDATA[<p>network namespace 是实现网络虚拟化的重要功能，它能创建多个隔离的网络空间，它们有独自的网络栈信息。不管是虚拟机还是容器，运行的时候仿佛自己就在独立的网络中。这篇文章介绍 network namespace 的基本概念和用法，network namespace 是 linux 内核提供的功能，这篇文章借助 <code>ip</code> 命令来完成各种操作。<code>ip</code> 命令来自于 <code>iproute2</code> 安装包，一般系统会默认安装，如果没有的话，请读者自行安装。</p>
 <p><strong>NOTE</strong>：<code>ip</code> 命令因为需要修改系统的网络配置，默认需要 sudo 权限。这篇文章使用 root 用户执行，请不要在生产环境或者重要的系统中用 root 直接执行，以防产生错误。</p>
 <p><code>ip</code> 命令管理的功能很多， 和 network namespace 有关的操作都是在子命令 <code>ip netns</code> 下进行的，可以通过 ``ip netns help` 查看所有操作的帮助信息。</p>
