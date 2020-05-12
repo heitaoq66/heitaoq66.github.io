@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>openstak 架构</title>
+    <title>openstak 架构（nova、cinder）</title>
     <url>/2020/05/12/openstak-%E6%9E%B6%E6%9E%84/</url>
     <content><![CDATA[<p>nova主要组成:</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nova-api</span><br><span class="line"></span><br><span class="line">nova-scheduler</span><br><span class="line"></span><br><span class="line">nova-compute</span><br><span class="line"></span><br><span class="line">nova-conductor</span><br></pre></td></tr></table></figure>

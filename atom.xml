@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-05-12T01:49:01.936Z</updated>
+  <updated>2020-05-12T02:05:55.887Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>openstak 架构</title>
+    <title>openstak 架构（nova、cinder）</title>
     <link href="https://heitaoq66.github.io/2020/05/12/openstak-%E6%9E%B6%E6%9E%84/"/>
     <id>https://heitaoq66.github.io/2020/05/12/openstak-%E6%9E%B6%E6%9E%84/</id>
     <published>2020-05-12T01:44:20.000Z</published>
-    <updated>2020-05-12T01:49:01.936Z</updated>
+    <updated>2020-05-12T02:05:55.887Z</updated>
     
     <summary type="html">
     
