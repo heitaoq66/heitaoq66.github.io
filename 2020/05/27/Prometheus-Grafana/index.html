@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1590557892/prometheus/WeChat9b4533604e08524e658ab1260ea50dee_gqjuss.png">
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1590557895/prometheus/WeChatf92cc3651108a8ada91a94b18809e633_lthyha.png">
 <meta property="article:published_time" content="2020-05-27T04:55:05.000Z">
-<meta property="article:modified_time" content="2020-05-27T06:15:52.066Z">
+<meta property="article:modified_time" content="2020-05-27T12:41:30.323Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="监控">
 <meta name="twitter:card" content="summary">
@@ -434,12 +434,9 @@
 <li><p>部署Prometheus-Operator,从consul发现已经注册的prometheus</p>
 </li>
 </ul>
-<h1 id="Prometheus-可视化展示Grafana"><a href="#Prometheus-可视化展示Grafana" class="headerlink" title="Prometheus 可视化展示Grafana"></a>Prometheus 可视化展示Grafana</h1><ul>
-<li><p>Prometheus Web界面自带的图表是非常基础的，比较适合用来做测试。如果要构建强大的Dashboard，使用Grafana来对Prometheus采集到的数据进行可视化展示。</p>
-</li>
-<li><p>Grafana是用于可视化大型测量数据的开源程序，提供了强大和优雅的方式去创建、共享、浏览数据。Dashboard中显示了不同metric数据源中的数据。</p>
-</li>
-<li><p>Grafana最常用于因特网基础设施和应用分析，但在其他领域也有用到，比如：工业传感器、家庭自动化、过程控制等等。Grafana支持热插拔控制面板和可扩展的数据源，目前已经支持Graphite、InfluxDB、OpenTSDB、Elasticsearch、Prometheus等。</p>
+<h1 id="Prometheus-可视化展示Grafana"><a href="#Prometheus-可视化展示Grafana" class="headerlink" title="Prometheus 可视化展示Grafana"></a>Prometheus 可视化展示Grafana</h1><p>Prometheus Web界面自带的图表是非常基础的，比较适合用来做测试。如果要构建强大的Dashboard，使用Grafana来对Prometheus采集到的数据进行可视化展示。</p>
+<p>Grafana是用于可视化大型测量数据的开源程序，提供了强大和优雅的方式去创建、共享、浏览数据。Dashboard中显示了不同metric数据源中的数据。</p>
+<p>Grafana最常用于因特网基础设施和应用分析，但在其他领域也有用到，比如：工业传感器、家庭自动化、过程控制等等。Grafana支持热插拔控制面板和可扩展的数据源，目前已经支持Graphite、InfluxDB、OpenTSDB、Elasticsearch、Prometheus等。</p>
 <ol>
 <li><p>安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ wget https:&#x2F;&#x2F;s3-us-west-2.amazonaws.com&#x2F;grafana-releases&#x2F;release&#x2F;grafana_4.2.0_amd64.deb</span><br><span class="line">$ dpkg -i grafana_4.2.0_amd64.deb</span><br></pre></td></tr></table></figure>
@@ -457,8 +454,6 @@
 <li><p>访问Grafana<br>通过 <code>http://ip:3000</code> 访问Grafana Web界面<br>缺省帐号/密码为：admin/admin</p>
 </li>
 </ol>
-</li>
-</ul>
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1590557895/prometheus/WeChatf92cc3651108a8ada91a94b18809e633_lthyha.png" alt="img"></p>
 
       
