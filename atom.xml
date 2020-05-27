@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-05-12T02:05:55.887Z</updated>
+  <updated>2020-05-27T05:51:41.442Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Prometheus+Grafana</title>
+    <link href="https://heitaoq66.github.io/2020/05/27/Prometheus-Grafana/"/>
+    <id>https://heitaoq66.github.io/2020/05/27/Prometheus-Grafana/</id>
+    <published>2020-05-27T04:55:05.000Z</published>
+    <updated>2020-05-27T05:51:41.442Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;Prometheus-架构&quot;&gt;&lt;a href=&quot;#Prometheus-架构&quot; class=&quot;headerlink&quot; title=&quot;Prometheus 架构&quot;&gt;&lt;/a&gt;Prometheus 架构&lt;/h1&gt;&lt;p&gt;&lt;img
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="监控" scheme="https://heitaoq66.github.io/tags/%E7%9B%91%E6%8E%A7/"/>
+    
+  </entry>
   
   <entry>
     <title>openstak 架构（nova、cinder）</title>
