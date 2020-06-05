@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-05-27T13:02:02.608Z</updated>
+  <updated>2020-06-05T12:11:36.413Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>docker-容器资源</title>
+    <link href="https://heitaoq66.github.io/2020/06/05/docker-%E5%AE%B9%E5%99%A8%E8%B5%84%E6%BA%90/"/>
+    <id>https://heitaoq66.github.io/2020/06/05/docker-%E5%AE%B9%E5%99%A8%E8%B5%84%E6%BA%90/</id>
+    <published>2020-06-05T12:04:50.000Z</published>
+    <updated>2020-06-05T12:11:36.413Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;在使用 docker 运行容器时，一台主机上可能会运行几百个容器，这些容器虽然互相隔离，但是底层却使用着相同的
+        
+      
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Kubernetes" scheme="https://heitaoq66.github.io/tags/Kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>Prometheus+Grafana</title>
