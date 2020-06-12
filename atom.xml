@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-06-05T12:24:03.482Z</updated>
+  <updated>2020-06-12T08:12:06.246Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>金丝雀部署</title>
+    <link href="https://heitaoq66.github.io/2020/06/12/%E9%87%91%E4%B8%9D%E9%9B%80%E9%83%A8%E7%BD%B2/"/>
+    <id>https://heitaoq66.github.io/2020/06/12/%E9%87%91%E4%B8%9D%E9%9B%80%E9%83%A8%E7%BD%B2/</id>
+    <published>2020-06-12T08:07:16.000Z</published>
+    <updated>2020-06-12T08:12:06.246Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;金丝雀发布&quot;&gt;&lt;a href=&quot;#金丝雀发布&quot; class=&quot;headerlink&quot; title=&quot;金丝雀发布&quot;&gt;&lt;/a&gt;金丝雀发布&lt;/h1&gt;&lt;p&gt;金丝雀部署（Canary
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="Devops" scheme="https://heitaoq66.github.io/tags/Devops/"/>
+    
+  </entry>
   
   <entry>
     <title>docker-容器资源</title>
