@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-06-12T08:12:06.246Z</updated>
+  <updated>2020-08-05T04:35:21.923Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kubernetes-管理虚拟机之-KubeVirt</title>
+    <link href="https://heitaoq66.github.io/2020/08/05/Kubernetes-%E7%AE%A1%E7%90%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B-KubeVirt/"/>
+    <id>https://heitaoq66.github.io/2020/08/05/Kubernetes-%E7%AE%A1%E7%90%86%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B9%8B-KubeVirt/</id>
+    <published>2020-08-05T03:39:18.000Z</published>
+    <updated>2020-08-05T04:35:21.923Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;什么是-KubeVirt-？&quot;&gt;&lt;a href=&quot;#什么是-KubeVirt-？&quot; class=&quot;headerlink&quot; title=&quot;什么是 KubeVirt ？&quot;&gt;&lt;/a&gt;&lt;strong&gt;什么是 KubeVirt
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>金丝雀部署</title>
