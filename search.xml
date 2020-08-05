@@ -42,6 +42,9 @@
 <li><a href="https://remimin.github.io/2018/09/14/kubevirt/" target="_blank" rel="noopener">https://remimin.github.io/2018/09/14/kubevirt/</a></li>
 </ul>
 ]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
   </entry>
   <entry>
     <title>金丝雀部署</title>
