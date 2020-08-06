@@ -89,7 +89,7 @@
 <meta property="og:description" content="背景我们不应该期望 Kubernetes Pod 是健壮的，而是要假设 Pod 中的容器很可能因为各种原因发生故障而死掉。Deployment 等 controller 会通过动态创建和销毁 Pod 来保证应用整体的健壮性。换句话说，Pod 是脆弱的，但应用是健壮的。 每个 Pod 都有自己的 IP 地址。当 controller 用新 Pod 替代发生故障的 Pod 时，新 Pod 会分配到新的">
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1596698291/K8s/service/module_04_services_kabtvl.svg">
 <meta property="article:published_time" content="2020-08-06T07:13:14.000Z">
-<meta property="article:modified_time" content="2020-08-06T07:20:28.589Z">
+<meta property="article:modified_time" content="2020-08-06T08:11:59.467Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="Kubernetes">
 <meta name="twitter:card" content="summary">
@@ -425,8 +425,14 @@
 <p>每个 Pod 都有自己的 IP 地址。当 controller 用新 Pod 替代发生故障的 Pod 时，新 Pod 会分配到新的 IP 地址。这样就产生了一个问题：</p>
 <p>如果一组 Pod 对外提供服务（比如 HTTP），它们的 IP 很有可能发生变化，那么客户端如何找到并访问这个服务呢？</p>
 <p>Kubernetes 给出的解决方案是 Service。</p>
-<h2 id="Service-架构"><a href="#Service-架构" class="headerlink" title="Service 架构"></a>Service 架构</h2><p>Kubernetes Service 从逻辑上代表了一组 Pod，具体是哪些 Pod 则是由 label 来挑选。Service 有自己 IP，而且这个 IP 是不变的。客户端只需要访问 Service 的 IP，Kubernetes 则负责建立和维护 Service 与 Pod 的映射关系。无论后端 Pod 如何变化，对客户端不会有任何影响，因为 Service 没有变。</p>
+<h2 id="Service-架构"><a href="#Service-架构" class="headerlink" title="Service 架构"></a>Service 架构</h2><p>Kubernetes Service 从逻辑上代表了一组 Pod，具体是哪些 Pod 则是由 label 来挑选。Service 有自己 IP，而且这个 IP 是不变的。客户端只需要访问 Service 的 IP，Kubernetes 则负责建立和维护 Service 与 Pod 的映射关系（底层是通过Iptables完成）。无论后端 Pod 如何变化，对客户端不会有任何影响，因为 Service 没有变。</p>
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1596698291/K8s/service/module_04_services_kabtvl.svg" alt="img"></p>
+<h2 id="暴露方式"><a href="#暴露方式" class="headerlink" title="暴露方式"></a>暴露方式</h2><ul>
+<li><em>ClusterIP</em> (默认) - 在集群的内部 IP 上公开 Service 。这种类型使得 Service 只能从集群内访问。</li>
+<li><em>NodePort</em> - 使用 NAT 在集群中每个选定 Node 的相同端口上公开 Service 。使用<code>&lt;NodeIP&gt;:&lt;NodePort&gt;</code> 从集群外部访问 Service。</li>
+<li><em>LoadBalancer</em> - 在当前云中创建一个外部负载均衡器(如果支持的话)，并为 Service 分配一个固定的外部IP。</li>
+<li><em>ExternalName</em> - 通过返回带有该名称的 CNAME 记录，使用任意名称(由 spec 中的<code>externalName</code>指定)公开 Service。不使用代理。这种类型需要<code>kube-dns</code>的v1.7或更高版本。</li>
+</ul>
 
       
     </div>
@@ -632,7 +638,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-架构"><span class="nav-number">2.</span> <span class="nav-text">Service 架构</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Service-架构"><span class="nav-number">2.</span> <span class="nav-text">Service 架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#暴露方式"><span class="nav-number">3.</span> <span class="nav-text">暴露方式</span></a></li></ol></div>
             
 
           </div>
