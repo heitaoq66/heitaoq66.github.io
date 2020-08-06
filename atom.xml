@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-08-05T07:09:28.198Z</updated>
+  <updated>2020-08-06T07:20:28.589Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kubernetes之Service</title>
+    <link href="https://heitaoq66.github.io/2020/08/06/Kubernetes%E4%B9%8BService/"/>
+    <id>https://heitaoq66.github.io/2020/08/06/Kubernetes%E4%B9%8BService/</id>
+    <published>2020-08-06T07:13:14.000Z</published>
+    <updated>2020-08-06T07:20:28.589Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;我们不应该期望 Kubernetes Pod 是健壮的，而是要假设 Pod 中的容器很可能因为各种原因发生故障而死掉。Deployment
+        
+      
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Kubernetes" scheme="https://heitaoq66.github.io/tags/Kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>Kubernetes-管理虚拟机之-KubeVirt</title>
