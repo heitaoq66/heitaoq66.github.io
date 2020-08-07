@@ -3,8 +3,13 @@
   <entry>
     <title>Mesos与kubernetes区别</title>
     <url>/2020/08/06/Mesos%E4%B8%8Ekubernetes%E5%8C%BA%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="先说结论"><a href="#先说结论" class="headerlink" title="先说结论"></a>先说结论</h1><p>​        关于Mesos和Kubernetes的区别：Mesos更偏重于对应用资源的分布式调度和管理，它只负责资源的均衡分布式调度，至于资源的使用是由各种框架来实现的。而Kubernetes更偏重于提供一个基于Docker容器的轻量级应用集群部署平台，它着重于如何更有效的帮助开发运维人员实现一个应用的分布式集群部署。</p>
+    <content><![CDATA[<h1 id="先说结论"><a href="#先说结论" class="headerlink" title="先说结论"></a>先说结论</h1><p>​        关于Mesos和Kubernetes的区别：Mesos更偏重于对应用资源的分布式调度和管理，它只负责资源的均衡分布式调度，至于资源的使用是由各种框架来实现的,如Docker 容器集群，则是利用Marathon 框架来进行容器资源的编排。而Kubernetes更偏重于提供一个基于Docker容器的轻量级应用集群部署平台，它着重于如何更有效的帮助开发运维人员实现一个应用的分布式集群部署。</p>
 <h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><p>​        如对于一些非分布式任务型的应用（如一些移动APP），这些应用更多的通过分布式集群部署实现服务的负载均衡和弹性伸缩以及快速迭代部署，那么这种情况下我认为面向应用且被各大软将厂商支持的Kubernetes更有优势；而对于一些分布式任务型的应用（如Hadoop、spark等），这些应用是通过分布式集群资源调度系统实现计算资源的逻辑上一致性，进而实现任务的并行计算等功能，那么这种情况下我认为面向底层资源并采用双层调度机制的Mesos更具优势。</p>
+<h2 id="Marathon"><a href="#Marathon" class="headerlink" title="Marathon"></a>Marathon</h2><p>​        Marathon按照官方的说法是个基于Mesos的私有PaaS，它实现了Mesos的Framework。Marathon实现了服务发现和负载平衡、为部署提供提供REST API服务、授权和SSL、配置约束等功能。</p>
+<p>Marathon支持通过Shell命令和Docker部署应用。提供Web界面、支持cpu/mem、实例数等参数设置，支持单应用的Scale，但不支持复杂的集群定义。Marathon本身是通过Scala实现的。</p>
+<p>Marathon能够支持运行长服务，比如Web应用等。Marathon能够原样运行任何Linux二进制发布版本，如Tomcat Play等等。</p>
+<p>理解Mesos和Marathon之间的关系，如果将Mesos类比为操作系统的内核，负责资源调度。则Marathon可以类比为服务管理系统，比如是init，systemd或upstart等系统，用来管理应用的状态信息。Marathon将应用程序部署为长时间运行的Mesos任务。</p>
+<h2 id="Marathon和Chronos的区别"><a href="#Marathon和Chronos的区别" class="headerlink" title="Marathon和Chronos的区别"></a>Marathon和Chronos的区别</h2><p>Marathon和Chronos都用于调度作业， 马拉松用于长期运行的任务（即服务），而 Chronos 用于计划的任务（即-样作业）</p>
 ]]></content>
       <categories>
         <category>微服务</category>
