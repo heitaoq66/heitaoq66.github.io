@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-08-07T06:38:02.436Z</updated>
+  <updated>2020-08-12T03:00:58.207Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>更适合私有云的网络部署模式-动态路由</title>
+    <link href="https://heitaoq66.github.io/2020/08/12/%E6%9B%B4%E9%80%82%E5%90%88%E7%A7%81%E6%9C%89%E4%BA%91%E7%9A%84%E7%BD%91%E7%BB%9C%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1/"/>
+    <id>https://heitaoq66.github.io/2020/08/12/%E6%9B%B4%E9%80%82%E5%90%88%E7%A7%81%E6%9C%89%E4%BA%91%E7%9A%84%E7%BD%91%E7%BB%9C%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1/</id>
+    <published>2020-08-12T02:33:40.000Z</published>
+    <updated>2020-08-12T03:00:58.207Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;在 ZStack 云网络中，网络的部署模式可以分为扁平网络和 VPC 网络，而在 VPC 网络中，又可以通过 EIP 或者 OSPF 动态路由两种模式来让外部网络访问 VPC 内部虚拟机，本文来分析一下这几种模式的特点和适用场景。&lt;/p&gt;
+&lt;h2
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="VPC" scheme="https://heitaoq66.github.io/tags/VPC/"/>
+    
+  </entry>
   
   <entry>
     <title>Mesos与kubernetes区别</title>
@@ -533,36 +563,6 @@
     
     
       <category term="MANO" scheme="https://heitaoq66.github.io/tags/MANO/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>openstack学习-网络管理(转)</title>
-    <link href="https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/"/>
-    <id>https://heitaoq66.github.io/2020/03/19/openstack%E5%AD%A6%E4%B9%A0-%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86/</id>
-    <published>2020-03-19T08:18:12.000Z</published>
-    <updated>2020-03-20T10:22:53.567Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;openstack的网络服务组件为neutron，它的设计目标是实现“网络即服务”。&lt;br&gt;设计上：遵循基于“软件定义网络（SDN)”的灵活和自动化原则&lt;br&gt;实现上：充分利用linux中各种网络相关的技术&lt;/p&gt;
-&lt;h1 id=&quot;物理网络与虚拟化网络&quot;&gt;&lt;a
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
-    
-      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="openstack" scheme="https://heitaoq66.github.io/tags/openstack/"/>
     
   </entry>
   
