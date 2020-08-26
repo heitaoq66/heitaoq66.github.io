@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-08-12T03:01:33.787Z</updated>
+  <updated>2020-08-26T04:51:05.541Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>揭秘AWS数据中心VPC解决方案</title>
+    <link href="https://heitaoq66.github.io/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
+    <id>https://heitaoq66.github.io/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</id>
+    <published>2020-08-26T03:43:20.000Z</published>
+    <updated>2020-08-26T04:51:05.541Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;子网内部通信：揭秘AWS数据中心VPC解决方案&quot;&gt;&lt;a href=&quot;#子网内部通信：揭秘AWS数据中心VPC解决方案&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="AWS" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/AWS/"/>
+    
+    
+      <category term="AWS" scheme="https://heitaoq66.github.io/tags/AWS/"/>
+    
+  </entry>
   
   <entry>
     <title>更适合私有云的网络部署模式-动态路由</title>
@@ -534,35 +563,6 @@
     
     
       <category term="AWS" scheme="https://heitaoq66.github.io/tags/AWS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>NFV MANO 架构</title>
-    <link href="https://heitaoq66.github.io/2020/03/19/NFV%20MANO%20%E6%9E%B6%E6%9E%84/"/>
-    <id>https://heitaoq66.github.io/2020/03/19/NFV%20MANO%20%E6%9E%B6%E6%9E%84/</id>
-    <published>2020-03-19T09:27:34.000Z</published>
-    <updated>2020-03-20T10:30:04.920Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;NFV-架构：&quot;&gt;&lt;a href=&quot;#NFV-架构：&quot; class=&quot;headerlink&quot; title=&quot;NFV 架构：&quot;&gt;&lt;/a&gt;&lt;strong&gt;NFV 架构：&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;&lt;img
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
-    
-      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="MANO" scheme="https://heitaoq66.github.io/tags/MANO/"/>
     
   </entry>
   
