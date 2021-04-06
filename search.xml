@@ -1,6 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>容器镜像安全防护</title>
+    <url>/2021/04/06/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/</url>
+    <content><![CDATA[<p>与传统的服务器和虚拟机相比，Docker容器为我们工作提供了更安全的环境。容器中可以使我们的应用环境组件实现更小，更轻。每个应用的组件彼此隔离并且大大减少了攻击面。这样即使有人入侵了您的应用，也会最大程度限制被攻击的程度，而且入侵后，利用漏洞传播攻击更难。</p>
+<p>不过，我们还是需要最大程度了解Docker技术本身的存在的安全隐患，这样才能实现最大程度保护我们的容器化系统。</p>
+<p>其中大部分将类似于我们已经为基于服务器所做的工作，例如监视容器活动，限制每个容器环境的资源消耗，维持良好的应用程序设计实践，修补漏洞并确保凭据不会被入侵您的Docker映像。</p>
+<p>但是，我们还是需要采取专门针对Docker部署的安全措施。因此，以下列出了确保容器平台上托管的应用程序安全的三个基本步骤。</p>
+<p>让我们从最重要的开始。</p>
+<h3 id="以非Root用户运行容器镜像"><a href="#以非Root用户运行容器镜像" class="headerlink" title="以非Root用户运行容器镜像"></a>以非Root用户运行容器镜像</h3><p>默认情况下，Docker授予容器中进程的root权限，这意味着它们具有对容器和主机环境的完全管理访问权限。一般来说，就像我们不会在标准Linux服务器上以root身份运行进程一样，我们大部分容器应用部署时，也不会在容器中以root身份运行。</p>
+<p>但是，如果没有适当的注意和关注，开发人员可以轻松地忽略此默认行为并创建不安全的映像，这些映像会错误地授予root用户访问权限。这可能是对黑客送了一份大礼，黑客可以利用此漏洞窃取API密钥，令牌，密码和其他机密数据，或者干扰容器部署的基础主机，并对服务器系统造成恶意破坏。</p>
+<p>甚至，您的DevOps团队还可能会受到侵害，从而给Docker环境带来意想不到的后果。例如，他们可能会无意中创建具有管理访问权限的，由Dockerfile命令构建的映像，这些映像在启动容器时会擦除数据或更改主机系统设置。</p>
+<h4 id="如何防止容器以root权限运行"><a href="#如何防止容器以root权限运行" class="headerlink" title="如何防止容器以root权限运行"></a>如何防止容器以root权限运行</h4><p>如果不确定基础镜像使用什么权限，应该强制使用自定义用户的非root用户或用户组。这样，容器进程只能访问我们预期功能所需要的资源</p>
+<p>可以通过以下任意方式操作即可：</p>
+<ul>
+<li>在Dockerfile中设置非root用户</li>
+</ul>
+<p>首先，设置仅具有应用程序所需访问权限的专用用户或用户组。</p>
+<p>然后，Dockerfile中添加User，并以此用户或组以构建镜像和启动容器运行时进程命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM centos:7</span><br><span class="line"></span><br><span class="line">     RUN groupadd -g 1000 basicuser   &amp;&amp;</span><br><span class="line"></span><br><span class="line">        useradd -r -u 1000 -g basicuser   basicuser</span><br><span class="line"></span><br><span class="line">     USER basicuser</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>在Docker run命令中使用-user指定非root用户</li>
+</ul>
+<p>Docker run命令中的-user选项将覆盖Dockerfile中指定的任何用户。所以，在以下示例中，您的容器将始终以最低特权运行-所提供的用户标识符1009的权限级别也最低。但是，此方法无法解决映像本身的潜在安全缺陷。因此，最好在Dockerfile中指定一个非root用户，以便您的容器始终安全运行。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker run --user 1009 centos:7</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用自己的私有注册中心"><a href="#使用自己的私有注册中心" class="headerlink" title="使用自己的私有注册中心"></a>使用自己的私有注册中心</h3><p>私有注册中心是由我们自己的组织搭建的完全独立的容器映像仓库。您可以搭建在自己的服务器上，也可以托管在第三方云服务上，例如Amazon ECR，Azure容器注册，Google容器注册，Red Hat Quay和JFrog自己的容器注册服务。</p>
+<p>私有注册中心可以让您获得更完善的镜像的管理方式，并且通常提供更高级的功能，可以帮助确保库存安全。</p>
+<p>例如：</p>
+<ul>
+<li>复杂的镜像扫描工具，用于识别威胁和未修补的漏洞。</li>
+</ul>
+<ul>
+<li><p>严格的治理，例如基于角色的访问控制（RBAC）和合规性监视。</p>
+</li>
+<li><p>数字签名，镜像认证和其他防篡改功能。</p>
+</li>
+<li><p>用于开发，测试和生产多环境的镜像仓库。</p>
+</li>
+</ul>
+<p>相比之下，诸如Docker Hub之类的公共注册表一般仅提供基本服务-您必须信任镜像发布者，而镜像发布者可能未遵循相同的高安全标准。</p>
+<p>这样，您最终可能会得到包含恶意或过时代码的镜像，并最终获得对数据泄露敞开大门的容器环境。</p>
+<h3 id="保持镜像最小化"><a href="#保持镜像最小化" class="headerlink" title="保持镜像最小化"></a>保持镜像最小化</h3><p>镜像越大，受到攻击的可能性越大。对于linux系统，您没有选择余地，但是对于Docker来说，只选择自己需要的组件即可。</p>
+<h4 id="选择最小的基础镜像"><a href="#选择最小的基础镜像" class="headerlink" title="选择最小的基础镜像"></a>选择最小的基础镜像</h4><p>Docker hub上的某些镜像比其他的镜像更简化。比如在ubuntu仓库中，有些镜像的大小是部分版本的2倍以上。</p>
+<p>所以在您获取镜像时，不要单纯的只获取最新版本的镜像，最理想的是获取占用空间最小的镜像，然后自主添加应用所需的软件包和依赖。</p>
+<p>Docker Hub显示存储库中每个映像的压缩大小，如下面的Minimal Ubuntu版本所示。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1617692463/Docker/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/20210105231438651_mwwo33.png" alt="你的镜像安全吗？插图(1)">))</p>
+<p>拉取镜像后可以使用docker images命令检查其实际大小。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker images</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后，如下所示查找刚刚下载的镜像的条目。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1617692459/Docker/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/20210105231449164_czvcjv.png" alt="你的镜像安全吗？插图(2)"></p>
+<h4 id="优化Dockerfile和-dockerignore中的镜像"><a href="#优化Dockerfile和-dockerignore中的镜像" class="headerlink" title="优化Dockerfile和.dockerignore中的镜像"></a>优化Dockerfile和.dockerignore中的镜像</h4><p>接下来，您需要创建一个Dockerfile来为容器构建简化镜像。这将由基础镜像层和自己的镜像层组成。添加这些层时，有些制品将不是运行时环境的必需部分。要排除这些，应该在要从中构建映像的根目录中设置一个.dockerignore文件。</p>
+<h4 id="多阶段构建"><a href="#多阶段构建" class="headerlink" title="多阶段构建"></a>多阶段构建</h4><p>最后，减小镜像大小的另一种方法是使用Docker多阶段构建功能，Docker 17.05及更高版本支持。</p>
+<p>基于这个能力，Dockerfile中可以使用多个FROM命令。</p>
+<p>对于每个新的FROM语句，我们可以使用多个不同的基础镜像。然后我们可以有选择的将所需的文件复制到下一阶段，多余的各层将被留下。具体示例如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM golang:1.7.3</span><br><span class="line"></span><br><span class="line">WORKDIR /go/src/github.com/alexellis/href-counter/</span><br><span class="line"></span><br><span class="line">RUN go get -d -v golang.org/x/net/html </span><br><span class="line"></span><br><span class="line">COPY app.go .</span><br><span class="line"></span><br><span class="line">RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FROM alpine:latest </span><br><span class="line"></span><br><span class="line">RUN apk --no-cache add ca-certificates</span><br><span class="line"></span><br><span class="line">WORKDIR /root/</span><br><span class="line"></span><br><span class="line">COPY --from=0 /go/src/github.com/alexellis/href-counter/app .</span><br><span class="line"></span><br><span class="line">CMD ["./app"]</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="验证镜像完整性"><a href="#验证镜像完整性" class="headerlink" title="验证镜像完整性"></a>验证镜像完整性</h4><p>改善容器安全状况的另一种方法是在将镜像从Docker Hub中拉出之前进行验证。</p>
+<p>Docker守护程序默认在不检查其完整性的情况下拉取Docker映像。但是，随着Docker Engine 1.8的发布，该平台引入了一项新功能Docker Content Trust，该功能支持镜像的数字签名和身份验证。</p>
+<p>此服务使您可以向发布到远程仓库的镜像添加加密签名。同时，每当您尝试拉取镜像时，它都会自动验证数字签名。这样，您可以确定镜像的所有者的身份是不是与他们声明的一致。</p>
+<p>要激活Docker Content Trust，您需要使用Linux export命令设置以下变量。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ export   DOCKER_CONTENT_TRUST&#x3D;1</span><br></pre></td></tr></table></figure>
+
+<p>这只会在您当前的shell中设置。如果要全面启用Docker Content Trust，则需要在所有用户共享的默认环境变量中进行设置。</p>
+<p>尽管Docker Content Trust无法验证映像的质量，但可以通过防止在传输过程中受到破坏或通过对存储库的未授权访问，以此来帮助保持镜像的清洁。</p>
+]]></content>
+      <categories>
+        <category>微服务</category>
+      </categories>
+      <tags>
+        <tag>Kubernetes</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>揭秘AWS数据中心VPC解决方案</title>
     <url>/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
     <content><![CDATA[<h3 id="子网内部通信：揭秘AWS数据中心VPC解决方案"><a href="#子网内部通信：揭秘AWS数据中心VPC解决方案" class="headerlink" title="子网内部通信：揭秘AWS数据中心VPC解决方案"></a>子网内部通信：揭秘AWS数据中心VPC解决方案</h3><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​       本文介绍了 Amazon Web 服务虚拟私有云 （AWS VPC） 控制平面操作和数据平面封装的原则。此外，本文还介绍了如何使用标准协议实现同一种转发模型。亚马逊尚未公布其 VPC 网络解决方案的详细信息，本文档依赖于公开的信息和作者的研究。编写本文档的动机是，我想指出，无论云网络的外观和感觉多么简单和容易，这些网络仍然像任何其他大型网络一样复杂。</p>

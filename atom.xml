@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2020-08-27T03:23:58.129Z</updated>
+  <updated>2021-04-06T07:02:24.481Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>容器镜像安全防护</title>
+    <link href="https://heitaoq66.github.io/2021/04/06/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/"/>
+    <id>https://heitaoq66.github.io/2021/04/06/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/</id>
+    <published>2021-04-06T06:57:14.000Z</published>
+    <updated>2021-04-06T07:02:24.481Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;与传统的服务器和虚拟机相比，Docker容器为我们工作提供了更安全的环境。容器中可以使我们的应用环境组件实现更小，更轻。每个应用的组件彼此隔离并且大大减少了攻击面。这样即使有人入侵了您的应用，也会最大程度限制被攻击的程度，而且入侵后，利用漏洞传播攻击更难。&lt;/p&gt;
+&lt;p&gt;不
+        
+      
+    
+    </summary>
+    
+    
+      <category term="微服务" scheme="https://heitaoq66.github.io/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    
+      <category term="Kubernetes" scheme="https://heitaoq66.github.io/tags/Kubernetes/"/>
+    
+  </entry>
   
   <entry>
     <title>揭秘AWS数据中心VPC解决方案</title>
@@ -534,35 +562,6 @@
     
       <category term="AWS" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/AWS/"/>
     
-    
-  </entry>
-  
-  <entry>
-    <title>AWS 预留实例RI 攻略</title>
-    <link href="https://heitaoq66.github.io/2020/03/20/AWS-%E9%A2%84%E7%95%99%E5%AE%9E%E4%BE%8BRI-%E6%94%BB%E7%95%A5/"/>
-    <id>https://heitaoq66.github.io/2020/03/20/AWS-%E9%A2%84%E7%95%99%E5%AE%9E%E4%BE%8BRI-%E6%94%BB%E7%95%A5/</id>
-    <published>2020-03-20T04:58:39.000Z</published>
-    <updated>2020-03-20T10:42:37.536Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;　预留实例（RI）是一种计费方式，并不是一种实例的类型，简单说就是一种”包年包月“的方式，通过RI我们最高可以获得相较于按需75%的优惠，进而降低您的云使用成本。您可能会说：“你说的这我都知道，并且RI我已经在用了。”
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
-    
-      <category term="AWS" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/AWS/"/>
-    
-    
-      <category term="AWS" scheme="https://heitaoq66.github.io/tags/AWS/"/>
     
   </entry>
   
