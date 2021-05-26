@@ -65,7 +65,25 @@
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png"></p>
 </li>
 </ol>
-<p>####四、部署ODFS</p>
+<p>####四、部署ADFS</p>
+<p>​    (1) 部署过程就不在此赘述了，此处说明下注意事项</p>
+<pre><code>- 需要提前创建服务账户;
+- ssl证书选择我们创建的证书 ，联合身份验证服务名称:即为域名，我设置的是sts.domain.com;
+- 数据库使用内置创建;</code></pre><p>​    (2) 验证:有两种方法可以验证</p>
+<ul>
+<li>打开浏览器窗口，在地址栏中键入联合身份验证服务名称，然后，在该名称的后面附加 <strong>federationmetadata/2007-06/federationmetadata.xml</strong>，以下载到、联合身份验证服务元数据终结点。例如(此元数据文件需保存，后面AWS配置需要)：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">　　　　https:&#x2F;&#x2F;sts.domain.com&#x2F;federationmetadata&#x2F;2007-06&#x2F;federationmetadata.xml</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>也可以浏览到 AD FS 登录页（联合身份验证服务名称后接 <strong>adfs/ls/idpinitiatedsignon.htm</strong>）。例如：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">　　　　https:&#x2F;&#x2F;sts.domain.com&#x2F;adfs&#x2F;ls&#x2F;idpinitiatedsignon.htm</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622015704/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/20_ia1fs3.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622015704/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/20_ia1fs3.png"></p>
+<p>####五、AWS配置</p>
+<p>(1)登录AWS控制台，进入IAM点击身份提供商，并创建，这里选择SAML协议，提供商名称ADFS(请保持一致)，后面需要校验，文件上传ADFS下载的元数据文件federationmetadata.xml</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622016264/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/21_clbwrt.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622016264/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/21_clbwrt.png"></p>
 ]]></content>
       <categories>
         <category>云</category>
