@@ -79,8 +79,10 @@
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622016264/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/21_clbwrt.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622016264/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/21_clbwrt.png"></p>
 <p>(2) 创建完成后记录ARN</p>
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622016881/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/22_flwdhu.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622016881/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/22_flwdhu.png"></p>
-<p>(3) 点击分配角色</p>
-]]></content>
+<p>(3) 点击分配角色，创建角色名为ADFS-dev (请保持一致，后面讲解原因)，权限自己选择，我这里直接给的admin权限，同样创建完成后记录ARN,信任关系显示刚刚创建的身份提供商</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622017918/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/23_unf005.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622017918/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/23_unf005.png"></p>
+<p>(4)至此AWS侧配置完毕。下面我们配置 ADFS侧建立信任关系</p>
+<h3 id="六、ADFS配置"><a href="#六、ADFS配置" class="headerlink" title="六、ADFS配置"></a>六、ADFS配置</h3>]]></content>
       <categories>
         <category>云</category>
         <category>AWS</category>
