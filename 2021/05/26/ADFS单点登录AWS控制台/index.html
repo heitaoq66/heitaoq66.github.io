@@ -122,7 +122,7 @@
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1622015704/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/20_ia1fs3.png">
 <meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1622081222/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adfs/32_lrig4s.png">
 <meta property="article:published_time" content="2021-05-26T02:44:58.000Z">
-<meta property="article:modified_time" content="2021-05-27T02:09:08.878Z">
+<meta property="article:modified_time" content="2021-05-27T02:18:58.796Z">
 <meta property="article:author" content="黑桃Q">
 <meta property="article:tag" content="AWS">
 <meta name="twitter:card" content="summary">
@@ -526,7 +526,7 @@
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png"></p>
 </li>
 </ol>
-<h3 id="四、部署ADFS"><a href="#四、部署ADFS" class="headerlink" title="四、部署ADFS"></a>四、部署ADFS</h3><p>​    (1) 部署过程就不在此赘述了，此处说明下注意事项</p>
+<h3 id="四、服务器2部署ADFS"><a href="#四、服务器2部署ADFS" class="headerlink" title="四、服务器2部署ADFS"></a>四、服务器2部署ADFS</h3><p>​    (1) 部署过程就不在此赘述了，此处说明下注意事项</p>
 <pre><code>- 需要提前创建服务账户;
 - ssl证书选择我们创建的证书 ，联合身份验证服务名称:即为域名，我设置的是sts.domain.com;
 - 数据库使用内置创建;</code></pre><p>​    (2) 验证:有两种方法可以验证</p>
@@ -800,7 +800,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#架构图"><span class="nav-number">1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前期准备"><span class="nav-number">2.</span> <span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、服务器1安装AD域控制器"><span class="nav-number">3.1.</span> <span class="nav-text">一、服务器1安装AD域控制器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、服务器2加域"><span class="nav-number">3.2.</span> <span class="nav-text">二、服务器2加域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、创建自签ssl证书"><span class="nav-number">3.3.</span> <span class="nav-text">三、创建自签ssl证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、部署ADFS"><span class="nav-number">3.4.</span> <span class="nav-text">四、部署ADFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、AWS配置"><span class="nav-number">3.5.</span> <span class="nav-text">五、AWS配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、ADFS配置"><span class="nav-number">3.6.</span> <span class="nav-text">六、ADFS配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、完成"><span class="nav-number">3.7.</span> <span class="nav-text">七、完成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、故障排除"><span class="nav-number">3.8.</span> <span class="nav-text">八、故障排除</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#架构图"><span class="nav-number">1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前期准备"><span class="nav-number">2.</span> <span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">3.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、服务器1安装AD域控制器"><span class="nav-number">3.1.</span> <span class="nav-text">一、服务器1安装AD域控制器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、服务器2加域"><span class="nav-number">3.2.</span> <span class="nav-text">二、服务器2加域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、创建自签ssl证书"><span class="nav-number">3.3.</span> <span class="nav-text">三、创建自签ssl证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、服务器2部署ADFS"><span class="nav-number">3.4.</span> <span class="nav-text">四、服务器2部署ADFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、AWS配置"><span class="nav-number">3.5.</span> <span class="nav-text">五、AWS配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、ADFS配置"><span class="nav-number">3.6.</span> <span class="nav-text">六、ADFS配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、完成"><span class="nav-number">3.7.</span> <span class="nav-text">七、完成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、故障排除"><span class="nav-number">3.8.</span> <span class="nav-text">八、故障排除</span></a></li></ol></li></ol></div>
             
 
           </div>

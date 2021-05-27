@@ -64,7 +64,7 @@
 <p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png" alt="https://res.cloudinary.com/heitaoq/image/upload/v1622014424/aws/%E8%81%94%E5%90%88%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81/adcs/19_c60wi5.png"></p>
 </li>
 </ol>
-<h3 id="四、部署ADFS"><a href="#四、部署ADFS" class="headerlink" title="四、部署ADFS"></a>四、部署ADFS</h3><p>​    (1) 部署过程就不在此赘述了，此处说明下注意事项</p>
+<h3 id="四、服务器2部署ADFS"><a href="#四、服务器2部署ADFS" class="headerlink" title="四、服务器2部署ADFS"></a>四、服务器2部署ADFS</h3><p>​    (1) 部署过程就不在此赘述了，此处说明下注意事项</p>
 <pre><code>- 需要提前创建服务账户;
 - ssl证书选择我们创建的证书 ，联合身份验证服务名称:即为域名，我设置的是sts.domain.com;
 - 数据库使用内置创建;</code></pre><p>​    (2) 验证:有两种方法可以验证</p>
