@@ -81,17 +81,20 @@
 
 
 
-<meta name="description" content="VXLAN 包转发流程 ​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输： ![](https:&#x2F;&#x2F;res.cloudinary.com&#x2F;heitaoq&#x2F;image&#x2F;upload&#x2F;v1625207825&#x2F;vxlan&#x2F;VXLAN 包转发流程&#x2F;640_vvjtya.webp) ​">
+<meta name="description" content="VXLAN 包转发流程 ​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输：  ​        图中 Host-A 和 Host-B 位于 VNI 10 的 VXLAN，通过 VTEP-1 和 VTEP-2 之间建立的 VXLAN 隧道通信。数据传输过程如下：  Host-A 向 Ho">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VXLAN包转发流程">
 <meta property="og:url" content="https://heitaoq66.github.io/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/index.html">
 <meta property="og:site_name" content="传说中的黑桃">
-<meta property="og:description" content="VXLAN 包转发流程 ​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输： ![](https:&#x2F;&#x2F;res.cloudinary.com&#x2F;heitaoq&#x2F;image&#x2F;upload&#x2F;v1625207825&#x2F;vxlan&#x2F;VXLAN 包转发流程&#x2F;640_vvjtya.webp) ​">
+<meta property="og:description" content="VXLAN 包转发流程 ​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输：  ​        图中 Host-A 和 Host-B 位于 VNI 10 的 VXLAN，通过 VTEP-1 和 VTEP-2 之间建立的 VXLAN 隧道通信。数据传输过程如下：  Host-A 向 Ho">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN%20%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/640_vvjtya.webp">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN%20%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/640_1_yrc8ph.webp">
 <meta property="article:published_time" content="2021-07-02T06:27:26.000Z">
-<meta property="article:modified_time" content="2021-07-02T06:41:23.690Z">
+<meta property="article:modified_time" content="2021-07-02T06:53:38.973Z">
 <meta property="article:author" content="黑桃">
 <meta property="article:tag" content="vxlan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN%20%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/640_vvjtya.webp">
 
 
 
@@ -432,7 +435,7 @@
       
         <p><strong>VXLAN 包转发流程</strong></p>
 <p>​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输：</p>
-<p>![](<a href="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN" target="_blank" rel="noopener">https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN</a> 包转发流程/640_vvjtya.webp)</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN%20%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/640_vvjtya.webp" alt=""></p>
 <p>​        图中 Host-A 和 Host-B 位于 VNI 10 的 VXLAN，通过 VTEP-1 和 VTEP-2 之间建立的 VXLAN 隧道通信。数据传输过程如下：</p>
 <ol>
 <li><p>Host-A 向 Host-B 发送数据时，Host-B 的 MAC 和 IP 作为数据包的目标 MAC 和 IP，Host-A 的 MAC 作为数据包的源 MAC 和 IP，然后通过 VTEP-1 将数据发送出去。</p>
@@ -454,7 +457,7 @@
 </li>
 </ol>
 <p>我们先来看 Linux 如何支持 VXLAN，Open vSwitch 方式将在后面章节讨论。</p>
-<p>![](<a href="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN" target="_blank" rel="noopener">https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN</a> 包转发流程/640_1_yrc8ph.webp)</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1625207825/vxlan/VXLAN%20%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/640_1_yrc8ph.webp" alt=""></p>
 <p>实现方式：</p>
 <ol>
 <li><p>Linux vxlan 创建一个 UDP Socket，默认在 8472 端口监听。</p>

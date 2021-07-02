@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2021-07-02T06:41:23.690Z</updated>
+  <updated>2021-07-02T06:53:38.973Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://heitaoq66.github.io/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/"/>
     <id>https://heitaoq66.github.io/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/</id>
     <published>2021-07-02T06:27:26.000Z</published>
-    <updated>2021-07-02T06:41:23.690Z</updated>
+    <updated>2021-07-02T06:53:38.973Z</updated>
     
     <summary type="html">
     
@@ -31,7 +31,7 @@
         
           &lt;p&gt;&lt;strong&gt;VXLAN 包转发流程&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输：&lt;/p&gt;
-&lt;p&gt;![](&lt;a
+&lt;p&gt;&lt;img
         
       
     
