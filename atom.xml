@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2021-05-27T02:18:58.796Z</updated>
+  <updated>2021-07-02T06:41:23.690Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>VXLAN包转发流程</title>
+    <link href="https://heitaoq66.github.io/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/"/>
+    <id>https://heitaoq66.github.io/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/</id>
+    <published>2021-07-02T06:27:26.000Z</published>
+    <updated>2021-07-02T06:41:23.690Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;&lt;strong&gt;VXLAN 包转发流程&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;​        VXLAN 在 VTEP 间建立隧道，通过 Layer 3 网络传输封装后的 Layer 2 数据。下面例子演示了数据如何在 VXLAN 上传输：&lt;/p&gt;
+&lt;p&gt;![](&lt;a
+        
+      
+    
+    </summary>
+    
+    
+      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
+    
+      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="vxlan" scheme="https://heitaoq66.github.io/tags/vxlan/"/>
+    
+  </entry>
   
   <entry>
     <title>ADFS单点登录AWS控制台</title>
@@ -536,35 +567,6 @@
     
     
       <category term="Nginx" scheme="https://heitaoq66.github.io/tags/Nginx/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux网卡设置为混杂模式</title>
-    <link href="https://heitaoq66.github.io/2020/03/26/Linux%E7%BD%91%E5%8D%A1%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://heitaoq66.github.io/2020/03/26/Linux%E7%BD%91%E5%8D%A1%E8%AE%BE%E7%BD%AE%E4%B8%BA%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/</id>
-    <published>2020-03-26T13:24:29.000Z</published>
-    <updated>2020-03-26T13:31:31.000Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;混杂模式&quot;&gt;&lt;a href=&quot;#混杂模式&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-    
-      <category term="云" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/"/>
-    
-      <category term="网络" scheme="https://heitaoq66.github.io/categories/%E4%BA%91/%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="混杂模式" scheme="https://heitaoq66.github.io/tags/%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F/"/>
     
   </entry>
   
