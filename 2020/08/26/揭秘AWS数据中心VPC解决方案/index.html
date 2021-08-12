@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AWS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="传说中的黑桃" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="子网内部通信：揭秘AWS数据中心VPC解决方案前言​       本文介绍了 Amazon Web 服务虚拟私有云 （AWS VPC） 控制平面操作和数据平面封装的原则。此外，本文还介绍了如何使用标准协议实现同一种转发模型。亚马逊尚未公布其 VPC 网络解决方案的详细信息，本文档依赖于公开的信息和作者的研究。编写本文档的动机是，我想指出，无论云网络的外观和感觉多么简单和容易，这些网络仍然像任何其他">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭秘AWS数据中心VPC解决方案">
+<meta property="og:url" content="https://heitaoq66.github.io/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="传说中的黑桃">
+<meta property="og:description" content="子网内部通信：揭秘AWS数据中心VPC解决方案前言​       本文介绍了 Amazon Web 服务虚拟私有云 （AWS VPC） 控制平面操作和数据平面封装的原则。此外，本文还介绍了如何使用标准协议实现同一种转发模型。亚马逊尚未公布其 VPC 网络解决方案的详细信息，本文档依赖于公开的信息和作者的研究。编写本文档的动机是，我想指出，无论云网络的外观和感觉多么简单和容易，这些网络仍然像任何其他">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000001_bsuhre.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000002_umh0ta.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000003_ylh2k6.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000004_y9uf1r.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000005_agovj8.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000006_w81oju.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000007_ji9eyu.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000008_zughfj.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000009_wmnkfj.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000010_wlv0xx.jpg">
+<meta property="article:published_time" content="2020-08-26T03:43:20.000Z">
+<meta property="article:modified_time" content="2020-08-27T03:23:58.000Z">
+<meta property="article:author" content="黑桃">
+<meta property="article:tag" content="AWS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000001_bsuhre.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://heitaoq66.github.io/2020/08/26/揭秘AWS数据中心VPC解决方案/"/>
+
+
+
+
+
+  <title>揭秘AWS数据中心VPC解决方案 | 传说中的黑桃</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?eac125251a3ef3253e14bc3db966fe11";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">传说中的黑桃</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://heitaoq66.github.io/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黑桃">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/touxiang.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="传说中的黑桃">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">揭秘AWS数据中心VPC解决方案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-26T11:43:20+08:00">
+                2020-08-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91/" itemprop="url" rel="index">
+                    <span itemprop="name">云</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BA%91/AWS/" itemprop="url" rel="index">
+                    <span itemprop="name">AWS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/08/26/揭秘AWS数据中心VPC解决方案/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="leancloud_visitors" data-flag-title="揭秘AWS数据中心VPC解决方案">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="子网内部通信：揭秘AWS数据中心VPC解决方案"><a href="#子网内部通信：揭秘AWS数据中心VPC解决方案" class="headerlink" title="子网内部通信：揭秘AWS数据中心VPC解决方案"></a>子网内部通信：揭秘AWS数据中心VPC解决方案</h3><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​       本文介绍了 Amazon Web 服务虚拟私有云 （AWS VPC） 控制平面操作和数据平面封装的原则。此外，本文还介绍了如何使用标准协议实现同一种转发模型。亚马逊尚未公布其 VPC 网络解决方案的详细信息，本文档依赖于公开的信息和作者的研究。编写本文档的动机是，我想指出，无论云网络的外观和感觉多么简单和容易，这些网络仍然像任何其他大型网络一样复杂。</p>
+<h3 id="示例环境"><a href="#示例环境" class="headerlink" title="示例环境"></a>示例环境</h3><p>​       图 1-1 说明了在两个弹性云计算 （EC2） 实例 EC2-A 和 EC2-B 上的假想应用程序上运行的 AWS VPC 环境示例。实例 EC2-A 将在物理服务器主机-A 中启动，而实例 EC2-B 稍后将在物理服务器 Host-B 中启动。VPC vpc-1a2b3c4d 在斯德哥尔摩 （eu-North-1） 区域在可用性区 （AZ） eu-North-1c 创建。子网 172.16.31.0/20 可用于 AZ eu-North-1c。实例的子网为 172.31.10.0/24。具有 IP 地址 172.31.10.10 的弹性网络接口 1 （ENI1） 将连接到实例 EC2-A，IP 地址为 172.31.10.20 的 ENI2 将附加到实例 EC2-B。为简单起见，同一安全组 （SG） “sg-nwktimes”，允许 EC2-A 和 EC2-B 之间的所有数据流量）附加到两个实例。</p>
+<p>​       在两个物理服务器中，有一个软件路由器，路由器-1在主机-A和路由器-2在主机-B。服务器使用Offload NIC 连接到 AZ 底层网络，并且来自实例的数据流量直接从EC2发送到Offload NIC ，以绕过hypervisor。AZ 骨干包括三个路由器，路由器-3，路由器-4和路由器-5。此外，还有一个映射服务，表示集中控制平面。它持有一个实例到位置映射数据库，该数据库包含有关在给定 VPC 上运行的每个 EC2 实例的信息。路由器、服务器和映射服务使用 IPv6 寻址。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000001_bsuhre.jpg" alt="img"></p>
+<p>​                                                                    图1-1：<em>总体示例拓扑和 IP 寻址方案</em></p>
+<h3 id="控制平面：实例-EC2-A-主机注册过程"><a href="#控制平面：实例-EC2-A-主机注册过程" class="headerlink" title="控制平面：实例 EC2-A 主机注册过程"></a>控制平面：实例 EC2-A 主机注册过程</h3><p>​        映射服务获取实例到位置映射信息的过程不会由 Amazon 发布。但是，必须有某种注册过程，其中托管服务器将其实例注册到映射服务。映射服务至少需要了解以下特定于实例的信息：（A） 物理位置服务器、（B） IP 地址和 MAC 地址信息、（C） IP/MAC 地址绑定到的 ENI 以及实例所属的 VPC（租户信息）。图 1-2 说明了与映射服务数据库中实例 EC2-A 相关的假定映射条目信息。注册信息可以通过底嵌网络发送，或者可能有一些专用的控制平面通道用于注册消息。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000002_umh0ta.jpg" alt="img"></p>
+<p><strong>图1-2：</strong> <em>实例EC2-A按主机-A注册过程。</em></p>
+<h3 id="控制平面：实例-EC2-B-注册过程（按主机-B）"><a href="#控制平面：实例-EC2-B-注册过程（按主机-B）" class="headerlink" title="控制平面：实例 EC2-B 注册过程（按主机-B）"></a>控制平面：实例 EC2-B 注册过程（按主机-B）</h3><p>​        当实例 EC2-A 在主机 B 中启动时，也会发生相同的注册过程。映射服务现在知道两个 EC2 实例的位置。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000003_ylh2k6.jpg" alt="img"></p>
+<p><strong>图1-3：</strong> <em>实例EC2-B注册过程（按主机-B）。</em></p>
+<h3 id="控制平面：通过映射服务进行注册信息分发过程"><a href="#控制平面：通过映射服务进行注册信息分发过程" class="headerlink" title="控制平面：通过映射服务进行注册信息分发过程"></a>控制平面：通过映射服务进行注册信息分发过程</h3><p>​        公共 AWS VPC 文档指出，实例到位置（AWS 可能不使用此术语）映射服务负责仅将信息发布到托管特定 VPC 的服务器。在我们的示例中，这意味着映射服务将发布实例 EC2-A 到主机-B 的可访问性信息和实例 EC2-B 到主机-A 的可访问性信息。图 1-4 说明了通过映射服务进行实例到位置的发布过程。没有关于如何这样做的公共文档。但是，我们可以假定该过程不是数据驱动的，这意味着只有当远程服务器托管到目标的数据，但映射服务在推送模型中发布（没有服务器请求）时，服务器才请求该信息。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000004_y9uf1r.jpg" alt="img"></p>
+<p><strong>图1-4：</strong> <em>按映射服务进行注册信息分发过程。</em></p>
+<h3 id="控制平面：与基于LISP的EID注册过程的相似之处"><a href="#控制平面：与基于LISP的EID注册过程的相似之处" class="headerlink" title="控制平面：与基于LISP的EID注册过程的相似之处"></a>控制平面：与基于LISP的EID注册过程的相似之处</h3><p>​        AWS VPC 中的 EC2 实例和基于定位器/ID 分离协议 （LISP） 网络中的 EID 到 RLOC 的注册过程（如思科的 SD 访问/校园交换矩阵）具有类似的操作模式。图 1-5 解释了 LISP 模型使用与 AWS VPC 示例相同的示例拓扑。当建筑-A中的 Edge Sw-1 了解主机-B MAC/IP 地址信息（从 GARP/ARP/入口数据）时，它会生成 LISP 映射寄存器消息并将其发送到映射服务器（映射系统中的组件）。在我们的示例中，消息<em>包含映射记录</em>，这些记录描述 （A） 主机附加到的 LISP 实例 ID（租户标识符），（B） 主机 IP 地址和 （C） 映射信息的有效时间。位置信息（最后一跳路由器）编码为<em>附加到映射记录的</em>定位器记录。在位置描述信息中，LISP 地图注册消息包含其他信息，但这些信息超出了本文档的范围。总之，在基于 AWS VPC 和 LISP 的网络中，最终主机的注册看起来相似。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000005_agovj8.jpg" alt="img"></p>
+<p><strong>图1-5：</strong> <em>Edge Sw-2的注册过程。</em></p>
+<h3 id="控制平面：LISP中映射系统的注册信息分发过程"><a href="#控制平面：LISP中映射系统的注册信息分发过程" class="headerlink" title="控制平面：LISP中映射系统的注册信息分发过程"></a>控制平面：LISP中映射系统的注册信息分发过程</h3><p>​        尽管与LISP端点注册过程相比，AWS VPC中的端点注册过程具有相似之处，但如何将有关子网内主机的位置信息提供给边缘设备的过程却有所不同。LISP网络中的边缘设备（入口隧道路由器-iTR）使用LISP Map-Request消息（图1-6），其中iTR在AWS中的Mapping Service期间从Mapping Resolver（映射系统中的组件）询问EID到RLOC信息VPC分发该特定VPC中具有活动EC2实例的所有服务器的位置信息，并且无需请求机制即可运行。从这个意义上讲，AWS VPC解决方案与基于BGP EVPN的网络（主要用于数据中心）有一些相似之处，其中VTEP交换机将已连接主机的NLRI通告给BGP EVPN Route-Reflector（通常是Spine交换机），后者又将这些通告给Route-Reflector客户端（其他VTEP开关）。NLRI导入策略基于路由目标（BGP扩展社区路径属性）。但是，基于BGP EVPN的解决方案中没有使用映射系统/服务。映射请求过程如图1-6所示。主机B向主机A发送数据（为简化起见，忽略了ARP进程）。当Edge Sw-2接收到数据时，它将检查本地Mapping-Cache（MC），并且由于MC中还没有EID-to-RLOC信息，因此它将Map-Request消息发送给Map-Responder。Map-Responder从Map-Server EID-to-RLOC映射数据库中检查映射信息是否可用。选中“ Check”，并且Map-Resolver使用map-Reply消息响应Edge Sw-2，其中描述了Host-A的位置。Edge Sw-2将信息存储在其本地映射缓存中，现在它可以将数据发送到Host-A。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000006_w81oju.jpg" alt="img"></p>
+<p><strong>图 1-6：</strong> <em>LISP Edge Sw-2的LISP映射请求过程。</em></p>
+<p>​       从理论上讲，可以使用 LISP 构建同一种分布机制，其中端点注册到映射服务，然后将映射信息分发到其他边缘交换机，而无需单独的请求过程。LISP 路由器可以通过映射服务器从 EID 到 RLOC 数据库重新分发到 BGP，并通告给所有 BGP 对等体。当通过代理隧道路由器 （PxTR） 将 EID 前缀从 LISP 站点通告到非 LISP 站点时，将使用此解决方案。图 1-7 说明了如何使用此解决方案将端点信息重新分发到边缘开关。此方法的问题在于，CP 将自己宣传为重新分配路由的下一跃点。这表示 CP 将位于不是首选模型的数据路径中。问题是，我们应该尽一切可能吗？我的观点是，即使LISP能够做到这一点，这是一个过于复杂的解决方案，并没有意义这样做。此外，它是否工作取决于供应商设备和运行在该设备上的代码。有些设备先进行 RIB 查找，然后进行 LISP 映射缓存查找，而某些设备的工作方式相反。如果通过 LISP 和 BGP 接收 EID 位置信息，首先检查哪个表确实很重要。如果首先验证 LISP 映射缓存，并且查找结果为负，则触发 LISP 映射请求过程。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413946/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000007_ji9eyu.jpg" alt="img"></p>
+<p><strong>图 1-7：*</strong>通过映射服务器将 LISP 重新分配到 BGP。*</p>
+<h3 id="控制平面：结论"><a href="#控制平面：结论" class="headerlink" title="控制平面：结论"></a>控制平面：结论</h3><p>​        虽然 AWS VPC 和基于 LISP 的网络中使用的注册过程有相似之处，但将映射信息分发到边缘设备（交换机/服务器）的方法是不同的。在 AWS VPC 中，终结点位置注册到映射服务，从该服务分发到服务器。在基于 LISP 的模型中，EID 注册到映射服务器，然后由 iTR 根据需要请求。</p>
+<h3 id="数据平面：AWS-VPC-VPC-隧道"><a href="#数据平面：AWS-VPC-VPC-隧道" class="headerlink" title="数据平面：AWS VPC - VPC 隧道"></a>数据平面：AWS VPC - VPC 隧道</h3><p>​        没有有关 AWS VPC 数据平面封装过程的详细公开信息。但是，AWS VPC 公共文档指出 VPC 标记在 VPC 标头中进行。此外，我们可以假设有关弹性网络接口 （ENI） 的信息也包含在 VPC 标头中。实例标识符可能在 VPC 隧道标头中携带，但此假设不基于任何文档。请注意，一些文档指出 AWS 可用区域上的底嵌网络使用 IPv6 寻址。图 1-8 说明了主机上实例 EC2-A 向主机 B 上运行的实例 EC2-B 发送 ICMP 请求消息的事件。在此阶段，所有实例注册信息分发和 ARP 进程由实例完成。当软交换机收到 ICMP 请求消息到非本地目标时，它会进行位置缓存查找以查找转发信息。它使用 Host-B 的 IP 地址 （2001：db8：0：100：2） 作为外部 IPv6 标头中的目标 IPv6 地址及其 IPv6 地址 （2001：db8：0：100：1） 作为源 IPv6 地址来构造隧道标头。然后，它将协议和端口信息添加到传输层标头中。此外，还有一个用于传输实例特定信息的 VPC 标头。VPC-Id/Tag 标识实例所属的租户，ENI 定义托管服务器内的位置。原始 ICMP 消息包装在隧道标头中，然后将消息发送到主干路由器。骨干路由器根据外部 IPv6 标头信息转发数据包。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000008_zughfj.jpg" alt="img"></p>
+<p> <strong>图1-8：VPC*</strong>封装过程。*</p>
+<h3 id="数据平面：LISP-结构-VXLAN-隧道"><a href="#数据平面：LISP-结构-VXLAN-隧道" class="headerlink" title="数据平面：LISP 结构 - VXLAN 隧道"></a>数据平面：LISP 结构 - VXLAN 隧道</h3><p>​        图 1-9 说明了主机 A 向 Host-B 发送 ICMP 请求消息的过程。Edge Sw-1 接收消息，并基于从本地 LISP 映射缓存找到的信息封装该消息。它将最后一跳路由器 Sw-2 （192.168.10.2） 的 IP 地址设置为外部 IP 标头中的目标 IP 地址，并使用其 IP 地址 （192.168.10.1） 作为源地址。VXLAN 在传输层中使用 UDP，其中目标 UDP 端口 4789 指示下一个标头是 VXAN 标头。在此示例中，VXLAN 标头还具有基于组策略 （GBP） 扩展标头，该标头包含组策略 ID 字段中定义的可伸缩组标记 （SGT） 信息。原始 ICMP 请求包装在这些隧道标头中。封装过程后，Edge Sw-1 将封装的 ICMP 请求消息发送到主干路由器，从而根据外部 IP 标头中的目标 IP 地址转发决策。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000009_wmnkfj.jpg" alt="img"></p>
+<p><strong>图1-9：</strong> <em>VPC封装过程。</em></p>
+<h3 id="端点安全性：安全组和可扩展组标签"><a href="#端点安全性：安全组和可扩展组标签" class="headerlink" title="端点安全性：安全组和可扩展组标签"></a>端点安全性：安全组和可扩展组标签</h3><p>​        图 1-10 中的左侧表示 AWS VPC 可用区，右侧表示园区结构。</p>
+<p>​        在主机中启动 EC2 实例时，您可以将默认或修改的安全组 （SG） 附加到该实例。在我们的示例中，实例 EC2-B 有一个 SG sg-nwktimes，它只允许实例 EC2-B （172.31.10.2） 的入站 HTTP 连接。此外，还有一个出站规则，它允许将 HTTP 连接到属于安全组 sg-网站的目标。这些规则是有状态的，这意味着返回流量允许入站和出站连接。此解决方案支持宏分段和微分段（子网中的分段）。此信息不在 VPC 封装的数据包中传输。</p>
+<p>​        在园区结构中，您可以使用可扩展组标记 （SGT） 进行宏和微分段。园区结构示例显示 SG 矩阵，其中垂直 SGT 表示源 SGT，而水平 SGT 定义目标 SGT。 SGT 77 附加到主机 A，并且所有流量允许在具有相同 SGT 77 作为其标识符的主机之间所有流量。此外，允许来自 SGT 77 的主机 A 的 HTTP/HTTPS 连接连接到与 SGT 22 标识的主机。请注意，SGT 信息在组 Polic-Id 字段中的 VXLAN 标头中携带。基于 SGT 的分段模型本质上是无状态的，必须分别在两个方向允许流量。</p>
+<p><img src="https://res.cloudinary.com/heitaoq/image/upload/v1598413948/aws/vpc%E6%8F%AD%E7%A7%98/ia_100000010_wlv0xx.jpg" alt="img"></p>
+<p> <strong>图 1-10：</strong> <em>AWS VPC SG 与 VXLAN SGT 相比。</em></p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>[RFC 6830]D. Farinacci等人，”定位器/身份证分离协议”，RFC 6830，2013年1月。</p>
+<p>[RFC 6833]V. 富勒和D.法里纳奇，”定位器/ID分离协议（LISP）地图-服务器接口”，RFC 6833，2013年1月。</p>
+<p>[LISP 控制平面]D. Farinacci等人，”定位器/ID分离协议（LISP）控制平面”，草案-ietf-lisp-rdc6833bis-25，2019年6月16日。</p>
+<p>什么是亚马逊 Vpc？</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html</a></p>
+<p>AWS re： 发明 2015 |（NET403）又一天，又十亿包</p>
+<p><em><a href="https://www.youtube.com/watch?v=3qln2u1Vr2E" target="_blank" rel="noopener">https://www.youtube.com/watch?v=3qln2u1Vr2E</a></em></p>
+<p>AWS re： 发明 2017： 又一天， 又一个十亿流量 （NET405）</p>
+<p><em><a href="https://www.youtube.com/watch?v=8gc2DgBqo9U" target="_blank" rel="noopener">https://www.youtube.com/watch?v=8gc2DgBqo9U</a></em></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AWS/" rel="tag"><i class="fa fa-tag"></i> AWS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/12/%E6%9B%B4%E9%80%82%E5%90%88%E7%A7%81%E6%9C%89%E4%BA%91%E7%9A%84%E7%BD%91%E7%BB%9C%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F-%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1/" rel="next" title="更适合私有云的网络部署模式-动态路由">
+                <i class="fa fa-chevron-left"></i> 更适合私有云的网络部署模式-动态路由
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/04/06/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E5%AE%89%E5%85%A8%E9%98%B2%E6%8A%A4/" rel="prev" title="容器镜像安全防护">
+                容器镜像安全防护 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript" target="_blank" rel="noopener">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.png"
+                alt="黑桃" />
+            
+              <p class="site-author-name" itemprop="name">黑桃</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://heitaoq.cnblogs.com/" title="cnblog" target="_blank">cnblog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#子网内部通信：揭秘AWS数据中心VPC解决方案"><span class="nav-number">1.</span> <span class="nav-text">子网内部通信：揭秘AWS数据中心VPC解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例环境"><span class="nav-number">3.</span> <span class="nav-text">示例环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：实例-EC2-A-主机注册过程"><span class="nav-number">4.</span> <span class="nav-text">控制平面：实例 EC2-A 主机注册过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：实例-EC2-B-注册过程（按主机-B）"><span class="nav-number">5.</span> <span class="nav-text">控制平面：实例 EC2-B 注册过程（按主机-B）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：通过映射服务进行注册信息分发过程"><span class="nav-number">6.</span> <span class="nav-text">控制平面：通过映射服务进行注册信息分发过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：与基于LISP的EID注册过程的相似之处"><span class="nav-number">7.</span> <span class="nav-text">控制平面：与基于LISP的EID注册过程的相似之处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：LISP中映射系统的注册信息分发过程"><span class="nav-number">8.</span> <span class="nav-text">控制平面：LISP中映射系统的注册信息分发过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制平面：结论"><span class="nav-number">9.</span> <span class="nav-text">控制平面：结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据平面：AWS-VPC-VPC-隧道"><span class="nav-number">10.</span> <span class="nav-text">数据平面：AWS VPC - VPC 隧道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据平面：LISP-结构-VXLAN-隧道"><span class="nav-number">11.</span> <span class="nav-text">数据平面：LISP 结构 - VXLAN 隧道</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#端点安全性：安全组和可扩展组标签"><span class="nav-number">12.</span> <span class="nav-text">端点安全性：安全组和可扩展组标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">13.</span> <span class="nav-text">引用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黑桃</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://heitaoq.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://heitaoq66.github.io/2020/08/26/%E6%8F%AD%E7%A7%98AWS%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83VPC%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/';
+          this.page.identifier = '2020/08/26/揭秘AWS数据中心VPC解决方案/';
+          this.page.title = '揭秘AWS数据中心VPC解决方案';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://heitaoq.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("PY6jIGg4j4VsrWcOC5Cl9c2w-gzGzoHsz", "G33dkhUQmL5opCpcv9T9dcuk");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>
