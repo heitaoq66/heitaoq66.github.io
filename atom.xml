@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heitaoq66.github.io/"/>
-  <updated>2021-07-02T06:53:38.000Z</updated>
+  <updated>2022-03-26T10:38:41.428Z</updated>
   <id>https://heitaoq66.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux bridge构建vlan隔离环境</title>
+    <link href="https://heitaoq66.github.io/2022/03/26/linux-bridge%E6%9E%84%E5%BB%BAvlan%E9%9A%94%E7%A6%BB%E7%8E%AF%E5%A2%83/"/>
+    <id>https://heitaoq66.github.io/2022/03/26/linux-bridge%E6%9E%84%E5%BB%BAvlan%E9%9A%94%E7%A6%BB%E7%8E%AF%E5%A2%83/</id>
+    <published>2022-03-26T09:12:58.000Z</published>
+    <updated>2022-03-26T10:38:41.428Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;linux-bridge构建vlan隔离环境&quot;&gt;&lt;a href=&quot;#linux-bridge构建vlan隔离环境&quot; class=&quot;headerlink&quot; title=&quot;linux bridge构建vlan隔离环境&quot;&gt;&lt;/a&gt;linux
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>VXLAN包转发流程</title>
@@ -540,33 +563,6 @@
     
     
       <category term="Kubernetes" scheme="https://heitaoq66.github.io/tags/Kubernetes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>申请免费SSL加密你的网站</title>
-    <link href="https://heitaoq66.github.io/2020/03/29/%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99/"/>
-    <id>https://heitaoq66.github.io/2020/03/29/%E7%94%B3%E8%AF%B7%E5%85%8D%E8%B4%B9SSL%E5%8A%A0%E5%AF%86%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99/</id>
-    <published>2020-03-29T02:19:13.000Z</published>
-    <updated>2020-04-07T08:22:44.000Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;p&gt;​       
-        
-      
-    
-    </summary>
-    
-    
-      <category term="Nginx" scheme="https://heitaoq66.github.io/categories/Nginx/"/>
-    
-    
-      <category term="Nginx" scheme="https://heitaoq66.github.io/tags/Nginx/"/>
     
   </entry>
   

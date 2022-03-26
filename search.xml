@@ -1,6 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>linux bridge构建vlan隔离环境</title>
+    <url>/2022/03/26/linux-bridge%E6%9E%84%E5%BB%BAvlan%E9%9A%94%E7%A6%BB%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<h2 id="linux-bridge构建vlan隔离环境"><a href="#linux-bridge构建vlan隔离环境" class="headerlink" title="linux bridge构建vlan隔离环境"></a>linux bridge构建vlan隔离环境</h2><p>最近在学习vlan相关知识，便在虚拟机环境下构建了该环境，收获满满，记录如下</p>
+<h2 id="环境逻辑图："><a href="#环境逻辑图：" class="headerlink" title="环境逻辑图："></a>环境逻辑图：</h2><p>![image-20220326173322399](/Users/heitao/Library/Application Support/typora-user-images/image-20220326173322399.png)</p>
+<p>环境软件：vmware Fusion （笔记本），创建“network1 ” host网络，开启混杂模式</p>
+<p>虚拟机host1 ：centos7，网卡 ：ens34；创建vlan100、vlan200</p>
+<p>虚拟机host2 ：centos7，网卡 ：ens34；创建vlan100、vlan300</p>
+<p>两个虚拟机中分别还有一张网卡用于访问internet，对于本实验关系不大，没有画出。</p>
+<h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><ol>
+<li><p>host1虚拟机中br100 网络 与host2虚拟机中br100网络互通（即实现vm1与vm3互访，介于笔记本配置问题本次没有起虚拟机）</p>
+<p>172.16.100.2 &lt;—-&gt;172.16.100.3</p>
+</li>
+<li><p>host1虚拟机中br100 网络 与host2虚拟机中br100网络不可达</p>
+<p>172.16.200.2 &lt;–/–&gt;172.16.200.3</p>
+</li>
+</ol>
+<h2 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h2><h4 id="虚拟机host1"><a href="#虚拟机host1" class="headerlink" title="虚拟机host1"></a>虚拟机host1</h4><p>安装与使用bridge-utils：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum install brige-utils</span><br></pre></td></tr></table></figure>
+
+<p>创建网桥br100，配置ip 172.16.100.2/24</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-br100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;br100</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">IPADDR&#x3D;172.16.100.2</span><br><span class="line">NSTMASK&#x3D;255.255.255.0</span><br><span class="line">BOOTPROTO&#x3D;static</span><br><span class="line">TYPE&#x3D;Bridge</span><br></pre></td></tr></table></figure>
+
+<p>创建网桥br200，配置ip 172.16.200.2/24</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-br200</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;br200</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">IPADDR&#x3D;172.16.200.2</span><br><span class="line">NSTMASK&#x3D;255.255.255.0</span><br><span class="line">BOOTPROTO&#x3D;static</span><br><span class="line">TYPE&#x3D;Bridge</span><br></pre></td></tr></table></figure>
+
+<p>创建vlan100，并绑定br100，编辑网卡配置文件/etc/sysconfig/network-scripts/ifcfg-ens34.100</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cp &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34.100</span><br><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34.100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;ens34.100</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">BOOTPROTO&#x3D;none</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">VLAN&#x3D;yes</span><br><span class="line">#IPADDR&#x3D;172.16.100.1</span><br><span class="line">#NETMASK&#x3D; 255.255.255.0</span><br><span class="line">BRIDGE&#x3D;br100</span><br></pre></td></tr></table></figure>
+
+<p>同理创建vlan200，并绑定br200，编辑文件/etc/sysconfig/network-scripts/ifcfg-ens34.200</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;ens34.200</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">BOOTPROTO&#x3D;none</span><br><span class="line">#IPADDR&#x3D;172.16.200.1</span><br><span class="line">#NETMASK&#x3D; 255.255.255.0</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">VLAN&#x3D;yes</span><br><span class="line">BRIDGE&#x3D;br200</span><br></pre></td></tr></table></figure>
+
+<p>重启网络</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ service network restart</span><br></pre></td></tr></table></figure>
+
+<p>创建vm1，vm2，分别挂载到br100，br200上 （本次实验没创建，配置低，内存不够），命令如下，需开启VT-x：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ virt-install \</span><br><span class="line">--virt-type&#x3D;kvm \</span><br><span class="line">--name&#x3D;vm1 \</span><br><span class="line">--vcpus&#x3D;2 \</span><br><span class="line">--memory&#x3D;2048 \</span><br><span class="line">--location&#x3D;~&#x2F;disk&#x2F;CentOS-7-x86_64-DVD-1810.iso \</span><br><span class="line">--disk path&#x3D;~&#x2F;vms&#x2F;centos7.qcow2,size&#x3D;15,format&#x3D;qcow2 \</span><br><span class="line">--network bridge&#x3D;br100 \</span><br></pre></td></tr></table></figure>
+
+<p>查看网桥状态（如创建vm会看到 虚拟机interface）</p>
+<p>![image-20220326180101326](/Users/heitao/Library/Application Support/typora-user-images/image-20220326180101326.png)</p>
+<h4 id="虚拟机host2"><a href="#虚拟机host2" class="headerlink" title="虚拟机host2"></a>虚拟机host2</h4><p>安装与使用bridge-utils：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum install brige-utils</span><br></pre></td></tr></table></figure>
+
+<p>创建网桥br100，配置ip 172.16.100.3/24</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-br100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;br100</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">IPADDR&#x3D;172.16.100.3</span><br><span class="line">NSTMASK&#x3D;255.255.255.0</span><br><span class="line">BOOTPROTO&#x3D;static</span><br><span class="line">TYPE&#x3D;Bridge</span><br></pre></td></tr></table></figure>
+
+<p>创建网桥br300，配置ip 172.16.200.3/24</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-br200</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;br300</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">IPADDR&#x3D;172.16.200.3</span><br><span class="line">NSTMASK&#x3D;255.255.255.0</span><br><span class="line">BOOTPROTO&#x3D;static</span><br><span class="line">TYPE&#x3D;Bridge</span><br></pre></td></tr></table></figure>
+
+<p>创建vlan100，并绑定br100，编辑网卡配置文件/etc/sysconfig/network-scripts/ifcfg-ens34.100</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cp &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34.100</span><br><span class="line">$ vi &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens34.100</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;ens34.100</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">BOOTPROTO&#x3D;none</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">VLAN&#x3D;yes</span><br><span class="line">#IPADDR&#x3D;172.16.100.1</span><br><span class="line">#NETMASK&#x3D; 255.255.255.0</span><br><span class="line">BRIDGE&#x3D;br100</span><br></pre></td></tr></table></figure>
+
+<p>创建vlan300，并绑定br300，编辑文件/etc/sysconfig/network-scripts/ifcfg-ens34.300</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DEVICE&#x3D;ens34.300</span><br><span class="line">ONBOOT&#x3D;yes</span><br><span class="line">BOOTPROTO&#x3D;none</span><br><span class="line">#IPADDR&#x3D;172.16.200.1</span><br><span class="line">#NETMASK&#x3D; 255.255.255.0</span><br><span class="line">TYPE&#x3D;Ethernet</span><br><span class="line">VLAN&#x3D;yes</span><br><span class="line">BRIDGE&#x3D;br300</span><br></pre></td></tr></table></figure>
+
+<p>重启网络</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ service network restart</span><br></pre></td></tr></table></figure>
+
+<p>创建vm3，vm4，分别挂载到br100，br300上 （本次实验没创建，配置低，内存不够），命令如下，需开启VT-x：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ virt-install \</span><br><span class="line">--virt-type&#x3D;kvm \</span><br><span class="line">--name&#x3D;vm1 \</span><br><span class="line">--vcpus&#x3D;2 \</span><br><span class="line">--memory&#x3D;2048 \</span><br><span class="line">--location&#x3D;~&#x2F;disk&#x2F;CentOS-7-x86_64-DVD-1810.iso \</span><br><span class="line">--disk path&#x3D;~&#x2F;vms&#x2F;centos7.qcow2,size&#x3D;15,format&#x3D;qcow2 \</span><br><span class="line">--network bridge&#x3D;br100 \</span><br></pre></td></tr></table></figure>
+
+<p>查看网桥（如创建vm会看到 虚拟机interface）</p>
+<p>![image-20220326180454161](/Users/heitao/Library/Application Support/typora-user-images/image-20220326180454161.png)</p>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>验证1:</p>
+<p>host1虚拟机中br100 网络 与host2虚拟机中br100网络互通（同在vlan100，应互通），</p>
+<p>host1 操作如下：可以看到网络互通</p>
+<p>![image-20220326181334128](/Users/heitao/Library/Application Support/typora-user-images/image-20220326181334128.png)</p>
+<p>另开终端抓包情况：可以看到经过网卡ens34 携带vlan tag 100 </p>
+<p>![image-20220326181736497](/Users/heitao/Library/Application Support/typora-user-images/image-20220326181736497.png)</p>
+<p>验证2:</p>
+<p>host1虚拟机中br200 网络 与host2虚拟机中br300网络通信（不通vlan，理应隔离）</p>
+<p>host1 操作如下：可以看到网络不可达</p>
+<p>![image-20220326182136352](/Users/heitao/Library/Application Support/typora-user-images/image-20220326182136352.png)</p>
+<p>另开终端抓包情况：可以看到ARP协议在vlan200中泛洪</p>
+<p>![image-20220326182723145](/Users/heitao/Library/Application Support/typora-user-images/image-20220326182723145.png)</p>
+<p>这时，抓经过ens34.200的包，没有携带vlan tag，其实这相当于交换机中的access口，发出流量将tag剥掉，而ens34网卡相当于trunk，携带vlan tag进行传播</p>
+<p>![image-20220326182819638](/Users/heitao/Library/Application Support/typora-user-images/image-20220326182819638.png)</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li>在linux Bridge中可以虚拟媲美物理交换机功能的设备，实现vlan隔离转发</li>
+<li>本环境中ens34 相当于trunk，ens34.100，br100 则可以看做交换机中的access口，流量在ens34 中进出携带valn tag</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>VXLAN包转发流程</title>
     <url>/2021/07/02/VXLAN%E5%8C%85%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B/</url>
     <content><![CDATA[<p><strong>VXLAN 包转发流程</strong></p>
